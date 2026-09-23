@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Symbol } from "@/components/ui/Symbol";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { RevealLines } from "@/components/ui/RevealLines";
 import { nextTideLabel } from "@/lib/tide";
@@ -18,7 +17,7 @@ export function Hero({ onReserve }: { onReserve: () => void }) {
   }, []);
 
   useEffect(() => {
-    fetch("/api/content")
+    fetch("/api/content", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (data?.hero_video_url) setVideoUrl(data.hero_video_url);
@@ -45,17 +44,18 @@ export function Hero({ onReserve }: { onReserve: () => void }) {
       </div>
       <div className="absolute inset-0 bg-pm-ink/55" />
 
-      {/* top row: small lockup + tide clock */}
+      {/* top row: real brand lockup + tide clock */}
       <div className="relative z-10 flex justify-between items-start p-6 md:p-10">
-        <div className="flex items-center gap-2.5">
-          <Symbol baseWidth={17} restColor="#F3F1EC" />
-          <div>
-            <div className="font-display text-sm tracking-[0.10em] text-pm-bg uppercase">
-              PREAMAR
-            </div>
-            <div className="font-label font-semibold text-[8px] tracking-[0.15em] text-pm-bg/75 uppercase whitespace-nowrap">
-              ESPAÇOS DE TRABALHO · MONTIJO
-            </div>
+        <div className="flex items-center gap-3">
+          {/* TESTE: lockup preto (ardósia) sobre fundo transparente — trocar
+              para -transparente-claro se ficar pouco legível sobre o vídeo/veil escuro */}
+          <img
+            src="/logos/lockup-preamar-transparente-escuro.svg"
+            alt="PREAMAR"
+            className="h-6 md:h-7 w-auto"
+          />
+          <div className="font-label font-semibold text-[8px] tracking-[0.15em] text-pm-bg/75 uppercase whitespace-nowrap border-l border-pm-bg/30 pl-3">
+            ESPAÇOS DE TRABALHO · MONTIJO
           </div>
         </div>
         <div className="font-label font-semibold text-[11px] tracking-[0.15em] uppercase text-pm-sky text-right leading-relaxed">
@@ -77,7 +77,7 @@ export function Hero({ onReserve }: { onReserve: () => void }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="font-label font-bold text-sm md:text-base tracking-[0.15em] uppercase text-pm-sky mt-5 md:mt-7"
+          className="font-body text-pm-ink text-[28px] md:text-[44px] leading-tight tracking-normal normal-case mt-6 md:mt-8"
         >
           O teu escritório à beira-rio
         </motion.div>
