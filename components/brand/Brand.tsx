@@ -81,3 +81,45 @@ export function Lockup({
     </span>
   );
 }
+
+/**
+ * Monogram — marégrafo + "P", from symbol-preamar-*.svg. Drawn as inline SVG
+ * (not <img>) so the P picks up the page's Libre Caslon Display webfont.
+ * `size` = rendered height in px.
+ */
+export function Monogram({
+  size = 40,
+  color = INK,
+  className = "",
+}: {
+  size?: number;
+  color?: string;
+  className?: string;
+}) {
+  // geometry 1:1 with the official symbol file; viewBox cropped to the ink
+  return (
+    <svg
+      viewBox="24 56 146 106"
+      style={{ height: size, width: "auto", overflow: "visible" }}
+      className={className}
+      role="img"
+      aria-label="PREAMAR"
+    >
+      <rect x="26" y="60" width="44" height="9" fill={SKY} />
+      <rect x="45" y="79" width="25" height="6" fill={color} />
+      <rect x="26" y="95" width="44" height="6" fill={color} />
+      <rect x="45" y="111" width="25" height="6" fill={color} />
+      <rect x="26" y="127" width="44" height="6" fill={color} />
+      <text
+        x="86"
+        y="158"
+        fontSize="145"
+        letterSpacing="2"
+        fill={color}
+        style={{ fontFamily: "var(--font-caslon-display), 'Libre Caslon Display', Georgia, serif" }}
+      >
+        P
+      </text>
+    </svg>
+  );
+}

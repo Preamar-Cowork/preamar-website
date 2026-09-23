@@ -5,7 +5,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { RevealLines } from "@/components/ui/RevealLines";
 import { formatLisbonTime, type HighTide } from "@/lib/tideFormat";
-import { Lockup, Wordmark } from "@/components/brand/Brand";
+import { Monogram, Wordmark } from "@/components/brand/Brand";
+import { WaterLine } from "@/components/ui/WaterLine";
+import { ScrollCue } from "@/components/ui/ScrollCue";
 import {
   FONT_CLASS,
   HERO_DEFAULTS,
@@ -99,7 +101,7 @@ export function Hero({
       {/* top row: small lockup + real tide clock */}
       <div className="relative z-10 flex justify-between items-start p-6 md:p-10">
         <div>
-          <Lockup size={contained ? 24 : 22} color={fg} />
+          <Monogram size={contained ? 44 : 40} color={fg} />
           <div className="font-label font-semibold text-[9px] md:text-[10px] tracking-[0.18em] uppercase opacity-75 mt-1.5">
             Espaços de trabalho · Montijo
           </div>
@@ -174,16 +176,17 @@ export function Hero({
         </motion.button>
       </div>
 
-      {/* bottom fact line */}
-      <div className="relative z-10 px-6 md:px-10 pb-6 md:pb-8">
-        <div className="h-px mb-4 opacity-30" style={{ background: fg }} />
-        <div className="flex justify-center gap-2.5 font-label font-semibold text-[10px] md:text-[11px] tracking-[0.14em] uppercase opacity-85">
-          <span>Montijo</span>
-          <span className="opacity-50">·</span>
-          <span>Estuário do Tejo</span>
-          <span className="opacity-50">·</span>
-          <span>Sem ponte</span>
-        </div>
+      {/* bottom: soft water line + scroll cue */}
+      <div className="relative z-10 px-6 md:px-10 pb-4 md:pb-6">
+        <WaterLine color={fg} className="mb-3" />
+        <ScrollCue
+          color={fg}
+          onClick={
+            contained
+              ? undefined
+              : () => window.scrollBy({ top: window.innerHeight, behavior: reduce ? "auto" : "smooth" })
+          }
+        />
       </div>
     </section>
   );
