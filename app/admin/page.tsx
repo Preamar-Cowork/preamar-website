@@ -23,14 +23,21 @@ export default function AdminContentPage() {
     body.append("video", file);
     try {
       const res = await fetch("/api/admin/content", { method: "POST", body });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "upload_failed");
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        const text = await res.text().catch(() => "");
+        throw new Error(`resposta inesperada do servidor (${res.status}): ${text.slice(0, 200)}`);
+      }
+      if (!res.ok) throw new Error(data?.error || `upload_failed (${res.status})`);
       setHeroVideoUrl(data.hero_video_url);
       setStatus("done");
       setFile(null);
     } catch (e) {
       setStatus("error");
-      setErrorMsg("Não foi possível enviar o vídeo. Tenta de novo.");
+      const detail = e instanceof Error ? e.message : String(e);
+      setErrorMsg(`Não foi possível enviar o vídeo: ${detail}`);
     }
   }
 
