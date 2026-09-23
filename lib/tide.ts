@@ -62,7 +62,7 @@ const SPRING = 3.8; // m, preia-mar típica de águas vivas em Lisboa
 
 export function toMontijo(p: Raw): HighTide {
   const k = Math.min(1, Math.max(0, (p.h - NEAP) / (SPRING - NEAP)));
-  const dtMin = -3 - 3 * k;
+  const dtMin = Math.round(-3 - 3 * k);
   const dh = 0.06 + 0.05 * k;
   return {
     iso: new Date(p.t + dtMin * 60_000).toISOString(),
