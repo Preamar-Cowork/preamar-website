@@ -14,7 +14,7 @@ export function NextPhase() {
           </p>
         </div>
         <div className="min-h-[220px] border border-pm-line flex items-center justify-center p-4 text-center bg-[repeating-linear-gradient(135deg,#DAD5CB_0,#DAD5CB_2px,transparent_2px,transparent_11px)]">
-          <span className="font-mono text-[10px] text-pm-concrete">// render, fase 2</span>
+          <span className="font-mono text-[10px] text-pm-concrete">{"// render, fase 2"}</span>
         </div>
       </div>
     </section>

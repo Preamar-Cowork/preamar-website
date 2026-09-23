@@ -21,7 +21,7 @@ export function Hero({ onReserve }: { onReserve: () => void }) {
       {/* photo placeholder */}
       <div className="absolute inset-0 flex items-end justify-start p-5 bg-[repeating-linear-gradient(115deg,#4A4E51_0,#4A4E51_3px,#3F4346_3px,#3F4346_22px)]">
         <span className="font-mono text-xs text-pm-line/70">
-          // fotografia: fachada sobre o estuário, luz da tarde
+          {"// fotografia: fachada sobre o estuário, luz da tarde"}
         </span>
       </div>
       <div className="absolute inset-0 bg-pm-ink/40" />

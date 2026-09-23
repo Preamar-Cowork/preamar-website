@@ -19,7 +19,7 @@ export function Space() {
       <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
         <div className="h-[420px] md:h-[640px] flex items-center justify-center p-6 text-center bg-[repeating-linear-gradient(45deg,#363A3D_0,#363A3D_2px,transparent_2px,transparent_12px)]">
           <span className="font-mono text-xs text-pm-concrete">
-            // fotografia: interior, luz natural, secretárias
+            {"// fotografia: interior, luz natural, secretárias"}
           </span>
         </div>
         <div className="py-16 px-8 md:px-12 flex flex-col justify-center">
