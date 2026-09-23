@@ -123,3 +123,24 @@ export function Monogram({
     </svg>
   );
 }
+
+/** Icon only — the marégrafo from symbol-preamar-*.svg (without the P). `size` = height in px. */
+export function BrandIcon({
+  size = 28,
+  color = INK,
+  className = "",
+}: {
+  size?: number;
+  color?: string;
+  className?: string;
+}) {
+  return (
+    <svg viewBox="26 60 44 73" style={{ height: size, width: "auto" }} className={className} role="img" aria-label="PREAMAR">
+      <rect x="26" y="60" width="44" height="9" fill={SKY} />
+      <rect x="45" y="79" width="25" height="6" fill={color} />
+      <rect x="26" y="95" width="44" height="6" fill={color} />
+      <rect x="45" y="111" width="25" height="6" fill={color} />
+      <rect x="26" y="127" width="44" height="6" fill={color} />
+    </svg>
+  );
+}

@@ -5,8 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { RevealLines } from "@/components/ui/RevealLines";
 import { formatLisbonTime, type HighTide } from "@/lib/tideFormat";
-import { Monogram, Wordmark } from "@/components/brand/Brand";
-import { WaterLine } from "@/components/ui/WaterLine";
+import { BrandIcon, Wordmark } from "@/components/brand/Brand";
 import { ScrollCue } from "@/components/ui/ScrollCue";
 import {
   FONT_CLASS,
@@ -101,7 +100,7 @@ export function Hero({
       {/* top row: small lockup + real tide clock */}
       <div className="relative z-10 flex justify-between items-start p-6 md:p-10">
         <div>
-          <Monogram size={contained ? 44 : 40} color={fg} />
+          <BrandIcon size={contained ? 36 : 34} color={fg} />
           <div className="font-label font-semibold text-[9px] md:text-[10px] tracking-[0.18em] uppercase opacity-75 mt-1.5">
             Espaços de trabalho · Montijo
           </div>
@@ -176,9 +175,9 @@ export function Hero({
         </motion.button>
       </div>
 
-      {/* bottom: soft water line + scroll cue */}
+      {/* bottom: thin line + scroll cue */}
       <div className="relative z-10 px-6 md:px-10 pb-4 md:pb-6">
-        <WaterLine color={fg} className="mb-3" />
+        <div className="h-px mb-3 opacity-30" style={{ background: fg }} />
         <ScrollCue
           color={fg}
           onClick={
