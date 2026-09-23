@@ -11,6 +11,7 @@ import { NextPhase } from "@/components/sections/NextPhase";
 import { ReservationForm } from "@/components/sections/ReservationForm";
 import { FAQ } from "@/components/sections/FAQ";
 import { Footer } from "@/components/layout/Footer";
+import { TideProgressLine } from "@/components/ui/TideProgressLine";
 
 export default function Home() {
   const formRef = useRef<HTMLDivElement>(null);
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
+      <TideProgressLine />
       <Hero onReserve={scrollToForm} />
       <About />
       <Problem />

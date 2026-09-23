@@ -63,3 +63,38 @@ input[type="range"].pm-range::-moz-range-thumb {
   50% { transform: translateY(10px); opacity: 0.3; }
   100% { transform: translateY(0); opacity: 0.9; }
 }
+
+/* ---- v2 redesign: motion + texture primitives ---- */
+
+.pm-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--pm-line);
+  transition: border-bottom-width 0.25s ease, border-bottom-color 0.25s ease, padding-bottom 0.25s ease;
+  padding-bottom: 12px;
+}
+.pm-input:focus {
+  outline: none;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--pm-ink);
+  padding-bottom: 11px; /* compensate for the extra 1px so text doesn't jump */
+}
+
+/* subtle photographic grain, layered over duotone placeholders */
+.pm-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
