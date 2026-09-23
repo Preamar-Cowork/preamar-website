@@ -1,38 +1,11 @@
-"use client";
+import { Landing } from "@/components/Landing";
+import { getSiteContent } from "@/lib/siteContent";
 
-import { useRef } from "react";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Problem } from "@/components/sections/Problem";
-import { Space } from "@/components/sections/Space";
-import { Plans } from "@/components/sections/Plans";
-import { Fiscal } from "@/components/sections/Fiscal";
-import { NextPhase } from "@/components/sections/NextPhase";
-import { ReservationForm } from "@/components/sections/ReservationForm";
-import { FAQ } from "@/components/sections/FAQ";
-import { Footer } from "@/components/layout/Footer";
-import { TideProgressLine } from "@/components/ui/TideProgressLine";
+// Read the hero video + settings on every request, so changes saved in
+// /admin show up immediately (and with no flash of default values).
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  const formRef = useRef<HTMLDivElement>(null);
-
-  const scrollToForm = () => {
-    formRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
-      <TideProgressLine />
-      <Hero onReserve={scrollToForm} />
-      <About />
-      <Problem />
-      <Space />
-      <Plans />
-      <Fiscal />
-      <NextPhase />
-      <ReservationForm ref={formRef} />
-      <FAQ />
-      <Footer />
-    </main>
-  );
+export default async function Home() {
+  const content = await getSiteContent();
+  return <Landing heroVideoUrl={content.heroVideoUrl} heroSettings={content.heroSettings} />;
 }

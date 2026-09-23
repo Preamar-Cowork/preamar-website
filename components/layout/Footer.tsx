@@ -1,15 +1,15 @@
 "use client";
 
-import { Symbol } from "@/components/ui/Symbol";
-
 export function Footer() {
   return (
     <footer className="bg-pm-ink text-[#C9CDCF] py-20 md:py-28 px-6">
       <div className="max-w-[1320px] mx-auto flex flex-col items-center text-center gap-10">
-        <div className="flex items-center gap-4">
-          <Symbol baseWidth={38} restColor="#C9CDCF" />
-          <div className="font-display text-pm-bg text-3xl md:text-4xl tracking-[0.10em]">PREAMAR</div>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logos/lockup-preamar-transparente-claro.svg"
+          alt="PREAMAR — Espaços de trabalho no Montijo"
+          className="w-[240px] md:w-[300px] h-auto"
+        />
         <div className="font-label font-semibold text-[10px] tracking-[0.15em] uppercase text-[#8B8F91] flex flex-wrap justify-center gap-x-3 gap-y-2">
           <span>Montijo</span>
           <span>·</span>

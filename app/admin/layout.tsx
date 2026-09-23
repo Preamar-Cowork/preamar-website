@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
         <SignOutButton />
       </header>
-      <main className="max-w-[720px] mx-auto px-6 py-16">{children}</main>
+      <main className="max-w-[1320px] mx-auto px-6 py-12">{children}</main>
     </div>
   );
 }

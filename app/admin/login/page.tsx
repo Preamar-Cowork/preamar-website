@@ -3,7 +3,6 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Symbol } from "@/components/ui/Symbol";
 
 function LoginForm() {
   const router = useRouter();
@@ -31,9 +30,9 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm">
-      <div className="flex items-center gap-3 mb-10 justify-center">
-        <Symbol baseWidth={22} restColor="#F3F1EC" />
-        <div className="font-display text-pm-bg text-lg tracking-[0.10em] uppercase">PREAMAR</div>
+      <div className="flex mb-10 justify-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logos/lockup-preamar-transparente-claro.svg" alt="PREAMAR" className="w-[200px] h-auto" />
       </div>
       <div className="font-label font-bold text-[11px] tracking-[0.15em] uppercase text-pm-sky mb-8 text-center">
         Admin

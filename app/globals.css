@@ -22,7 +22,7 @@ body {
 }
 a { color: var(--pm-ink); }
 a:hover { color: var(--pm-sky); }
-input::placeholder { color: var(--pm-line); opacity: 1; }
+input::placeholder { color: #A3A6A8; opacity: 1; }
 
 input[type="range"].pm-range {
   -webkit-appearance: none;
