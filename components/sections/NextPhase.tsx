@@ -6,7 +6,7 @@ import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 
 export function NextPhase() {
   return (
-    <section className="bg-pm-bgAlt py-28 md:py-[160px] px-6 md:px-12">
+    <section className="bg-pm-bg py-28 md:py-[160px] px-6 md:px-12">
       <div className="max-w-[1240px] mx-auto grid grid-cols-1 md:grid-cols-[60%_40%] gap-12 md:gap-16 items-center">
         <div>
           <Folio n="06" />

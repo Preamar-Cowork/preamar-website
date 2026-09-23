@@ -27,7 +27,7 @@ export function Space() {
           className="h-[420px] md:h-[720px] [&_figcaption]:hidden"
         />
         <div className="py-16 md:py-24 px-8 md:px-14 flex flex-col justify-center">
-          <Folio n="03" dark />
+          <Folio n="02" dark />
           <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-6">
             O ESPAÇO
           </div>

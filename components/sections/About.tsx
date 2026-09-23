@@ -7,7 +7,7 @@ export function About() {
   return (
     <section className="bg-pm-bgAlt py-28 md:py-[160px] px-6">
       <div className="max-w-[680px] mx-auto text-left">
-        <Folio n="01" />
+        <Folio n="05" />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-8">
           O que é Preamar
         </div>

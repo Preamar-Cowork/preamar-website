@@ -32,7 +32,7 @@ const BLOCKS = [
 export function Problem() {
   return (
     <section className="max-w-[1320px] mx-auto py-32 md:py-[180px] px-6 md:px-12">
-      <Folio n="02" />
+      <Folio n="01" />
       <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-20">
         O PROBLEMA
       </div>

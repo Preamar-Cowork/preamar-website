@@ -31,11 +31,11 @@ export function Landing({
     <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
       <TideProgressLine />
       <Hero onReserve={scrollToForm} videoUrl={heroVideoUrl} settings={heroSettings} tides={tides} />
-      <About />
       <Problem />
       <Space />
       <Plans />
       <Fiscal />
+      <About />
       <NextPhase />
       <ReservationForm ref={formRef} />
       <FAQ />

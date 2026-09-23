@@ -32,7 +32,7 @@ export function Plans() {
   return (
     <section className="bg-pm-bg py-32 md:py-[180px] px-6">
       <div className="max-w-[1180px] mx-auto">
-        <Folio n="04" />
+        <Folio n="03" />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-16">
           Planos
         </div>
