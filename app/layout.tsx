@@ -24,9 +24,9 @@ const archivoNarrow = Archivo_Narrow({
 });
 
 export const metadata: Metadata = {
-  title: "PREAMAR — Espaços de Trabalho no Montijo",
+  title: "PREAMAR — Cowork e Escritórios no Montijo",
   description:
-    "PREAMAR — secretárias, gabinetes e sala de reuniões no Montijo, junto ao estuário do Tejo. Sem ponte, sem ruído.",
+    "Cowork e escritórios no Montijo, junto ao estuário do Tejo. Secretárias, gabinetes privados e sala de reuniões — a dez minutos de Alcochete, sem ponte.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
