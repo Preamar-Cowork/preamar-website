@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { sanitizeHeroSettings, type HeroSettings } from "@/lib/heroSettings";
 
@@ -12,6 +13,7 @@ export type SiteContent = {
  * any failure falls back to defaults instead of breaking the page.
  */
 export async function getSiteContent(): Promise<SiteContent> {
+  noStore(); // always fresh — edits in /admin must show up on the next page load
   const fallback: SiteContent = { heroVideoUrl: null, heroSettings: sanitizeHeroSettings(null) };
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback;

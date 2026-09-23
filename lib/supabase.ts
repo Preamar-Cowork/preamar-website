@@ -13,5 +13,8 @@ export function getSupabaseServerClient() {
   if (!url || !serviceKey) return null;
   return createClient(url, serviceKey, {
     auth: { persistSession: false },
+    // Next.js caches server-side fetch() by default; supabase-js uses fetch,
+    // so without this the home page kept serving stale site_content.
+    global: { fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }) },
   });
 }

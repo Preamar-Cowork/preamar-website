@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Hero } from "@/components/sections/Hero";
+import type { HighTide } from "@/lib/tideFormat";
 import {
   FONT_LABELS,
   HERO_DEFAULTS,
@@ -32,6 +33,7 @@ export default function AdminContentPage() {
   const [settings, setSettings] = useState<HeroSettings>(HERO_DEFAULTS);
   const [saved, setSaved] = useState<HeroSettings>(HERO_DEFAULTS);
   const [loaded, setLoaded] = useState(false);
+  const [tides, setTides] = useState<HighTide[]>([]);
   const [save, setSave] = useState<SaveState>({ kind: "idle" });
 
   const [file, setFile] = useState<File | null>(null);
@@ -48,6 +50,10 @@ export default function AdminContentPage() {
       })
       .catch(() => {})
       .finally(() => setLoaded(true));
+    fetch("/api/tide", { cache: "no-store" })
+      .then((r) => r.json())
+      .then((d) => setTides(d?.tides ?? []))
+      .catch(() => {});
   }, []);
 
   const dirty = JSON.stringify(settings) !== JSON.stringify(saved);
@@ -112,7 +118,7 @@ export default function AdminContentPage() {
             {dirty && <span className="text-pm-sky">alterações por guardar</span>}
           </div>
           <ScaledPreview>
-            {loaded && <Hero contained videoUrl={videoUrl} settings={settings} />}
+            {loaded && <Hero contained videoUrl={videoUrl} settings={settings} tides={tides} />}
           </ScaledPreview>
           <div className="flex flex-wrap items-center gap-4 mt-6">
             <button

@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandSymbol, Lockup } from "@/components/brand/Brand";
 import { forwardRef, useState } from "react";
 import { Chips } from "@/components/ui/Chips";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
@@ -96,12 +97,7 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
             <div>
               <div className="md:sticky md:top-24">
                 <Folio n="07" />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/logos/lockup-preamar-transparente-escuro.svg"
-                  alt="PREAMAR"
-                  className="w-[170px] h-auto mb-8"
-                />
+                <Lockup size={18} className="mb-8" />
                 <h2 className="font-display text-[34px] md:text-[42px] leading-[1.05] text-pm-ink mb-6">
                   Diz-nos o que precisas.
                 </h2>
@@ -218,8 +214,7 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
         ) : (
           <div className="text-center py-10 max-w-[600px] mx-auto">
             <div className="flex justify-center mb-8">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logos/symbol-preamar-transparente-escuro.svg" alt="" className="w-16 h-16" />
+              <BrandSymbol className="h-12 w-auto" />
             </div>
             <h2 className="font-display text-pm-ink text-[36px] mb-5">Recebemos o teu pedido.</h2>
             <p className="text-pm-graphite text-lg leading-relaxed">

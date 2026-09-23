@@ -13,13 +13,16 @@ import { FAQ } from "@/components/sections/FAQ";
 import { Footer } from "@/components/layout/Footer";
 import { TideProgressLine } from "@/components/ui/TideProgressLine";
 import type { HeroSettings } from "@/lib/heroSettings";
+import type { HighTide } from "@/lib/tideFormat";
 
 export function Landing({
   heroVideoUrl,
   heroSettings,
+  tides,
 }: {
   heroVideoUrl: string | null;
   heroSettings: HeroSettings;
+  tides: HighTide[];
 }) {
   const formRef = useRef<HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -27,7 +30,7 @@ export function Landing({
   return (
     <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
       <TideProgressLine />
-      <Hero onReserve={scrollToForm} videoUrl={heroVideoUrl} settings={heroSettings} />
+      <Hero onReserve={scrollToForm} videoUrl={heroVideoUrl} settings={heroSettings} tides={tides} />
       <About />
       <Problem />
       <Space />
