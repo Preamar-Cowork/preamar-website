@@ -102,7 +102,7 @@ export function Hero({
         <div>
           <BrandIcon size={contained ? 36 : 34} color={fg} />
           <div className="font-label font-semibold text-[9px] md:text-[10px] tracking-[0.18em] uppercase opacity-75 mt-1.5">
-            Espaços de trabalho · Montijo
+            {s.descriptor}
           </div>
         </div>
         {nextTide && (

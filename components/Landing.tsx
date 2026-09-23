@@ -14,32 +14,36 @@ import { Footer } from "@/components/layout/Footer";
 import { TideProgressLine } from "@/components/ui/TideProgressLine";
 import type { HeroSettings } from "@/lib/heroSettings";
 import type { HighTide } from "@/lib/tideFormat";
+import { folioOf, type SiteSections } from "@/lib/content/schema";
 
 export function Landing({
   heroVideoUrl,
   heroSettings,
+  sections: c,
   tides,
 }: {
   heroVideoUrl: string | null;
   heroSettings: HeroSettings;
+  sections: SiteSections;
   tides: HighTide[];
 }) {
   const formRef = useRef<HTMLDivElement>(null);
   const scrollToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth" });
 
+  // Order here must match SECTION_DEFS (lib/content/schema.ts) — it numbers the folios.
   return (
     <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
       <TideProgressLine />
       <Hero onReserve={scrollToForm} videoUrl={heroVideoUrl} settings={heroSettings} tides={tides} />
-      <Problem />
-      <Space />
-      <Plans />
-      <Fiscal />
-      <About />
-      <NextPhase />
-      <ReservationForm ref={formRef} />
-      <FAQ />
-      <Footer />
+      <Problem content={c.problem} n={folioOf("problem")} />
+      <Space content={c.space} n={folioOf("space")} />
+      <Plans content={c.plans} n={folioOf("plans")} />
+      <Fiscal content={c.fiscal} n={folioOf("fiscal")} />
+      <About content={c.about} n={folioOf("about")} />
+      <NextPhase content={c.next} n={folioOf("next")} />
+      <ReservationForm ref={formRef} content={c.form} n={folioOf("form")} />
+      <FAQ content={c.faq} n={folioOf("faq")} />
+      <Footer content={c.footer} />
     </main>
   );
 }

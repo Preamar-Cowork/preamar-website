@@ -12,12 +12,29 @@ export function PhotoPlaceholder({
   caption,
   className = "",
   dark = false,
+  src,
+  alt = "",
 }: {
   caption?: string;
   className?: string;
   dark?: boolean;
+  src?: string; // real photo (uploaded in /admin) — replaces the duotone
+  alt?: string;
 }) {
   const reduce = useReducedMotion();
+  if (src) {
+    return (
+      <figure className={className}>
+        <div className="relative overflow-hidden w-full h-full bg-pm-bgAlt">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={src} alt={alt || caption || ""} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
+        </div>
+        {caption && (
+          <figcaption className="mt-3 font-body text-[13px] text-pm-concrete">{caption}</figcaption>
+        )}
+      </figure>
+    );
+  }
   return (
     <figure className={className}>
       <div className="relative overflow-hidden w-full h-full">

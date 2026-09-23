@@ -5,20 +5,7 @@ import { forwardRef, useState } from "react";
 import { Chips } from "@/components/ui/Chips";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Folio } from "@/components/ui/Folio";
-
-const ONDE_OPTIONS = ["Montijo", "Alcochete", "Outro"];
-const INTERESSE_OPTIONS = [
-  "Secretária flexível",
-  "Secretária fixa",
-  "Gabinete privado",
-  "Só morada fiscal",
-  "Sala de reuniões pontual",
-  "Ainda não sei",
-];
-const GABINETE_OPTIONS = ["1-2", "3-4", "5-6", "Mais"];
-const DIAS_OPTIONS = ["1-2", "3-4", "5", "Ocasionalmente"];
-const QUANDO_OPTIONS = ["Já", "1-3 meses", "3-6 meses", "Só a explorar"];
-const CACIFO_OPTIONS = ["Sim", "Não", "Talvez"];
+import type { SiteSections } from "@/lib/content/schema";
 
 type FormState = {
   nome: string;
@@ -54,7 +41,9 @@ const labelClass = "font-label font-bold text-[11px] tracking-[0.15em] uppercase
 const checkboxBase =
   "w-[18px] h-[18px] border border-pm-ink flex-shrink-0 flex items-center justify-center text-[11px] text-pm-ink mt-0.5";
 
-export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationForm(_, ref) {
+type Props = { content: SiteSections["form"]; n: string };
+
+export const ReservationForm = forwardRef<HTMLDivElement, Props>(function ReservationForm({ content: c, n }, ref) {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -96,13 +85,13 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
           <div className="grid grid-cols-1 md:grid-cols-[35%_65%] gap-16">
             <div>
               <div className="md:sticky md:top-24">
-                <Folio n="07" />
+                <Folio n={n} />
                 <Lockup size={18} className="mb-8" />
                 <h2 className="font-display text-[34px] md:text-[42px] leading-[1.05] text-pm-ink mb-6">
-                  Diz-nos o que precisas.
+                  {c.heading}
                 </h2>
                 <p className="text-pm-graphite text-base leading-relaxed max-w-[32ch]">
-                  Respondemos em menos de 24 horas úteis e combinamos uma visita ao espaço.
+                  {c.text}
                 </p>
               </div>
             </div>
@@ -110,25 +99,25 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
             <div className="flex flex-col gap-9">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-9">
                 <input
-                  placeholder="Nome"
+                  placeholder={c.phNome}
                   value={form.nome}
                   onChange={(e) => setField("nome", e.target.value)}
                   className="pm-input font-body text-[17px] text-pm-ink w-full"
                 />
                 <input
-                  placeholder="Email"
+                  placeholder={c.phEmail}
                   value={form.email}
                   onChange={(e) => setField("email", e.target.value)}
                   className="pm-input font-body text-[17px] text-pm-ink w-full"
                 />
                 <input
-                  placeholder="Telemóvel"
+                  placeholder={c.phTelefone}
                   value={form.telefone}
                   onChange={(e) => setField("telefone", e.target.value)}
                   className="pm-input font-body text-[17px] text-pm-ink w-full"
                 />
                 <input
-                  placeholder="Profissão ou empresa"
+                  placeholder={c.phProfissao}
                   value={form.profissao}
                   onChange={(e) => setField("profissao", e.target.value)}
                   className="pm-input font-body text-[17px] text-pm-ink w-full"
@@ -136,25 +125,25 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
               </div>
 
               <div>
-                <div className={labelClass}>Onde moras</div>
-                <Chips options={ONDE_OPTIONS} value={form.onde} onChange={(v) => setField("onde", v)} light />
+                <div className={labelClass}>{c.ondeLabel}</div>
+                <Chips options={c.onde} value={form.onde} onChange={(v) => setField("onde", v)} light />
               </div>
 
               <div>
-                <div className={labelClass}>O que te interessa</div>
+                <div className={labelClass}>{c.interesseLabel}</div>
                 <Chips
-                  options={INTERESSE_OPTIONS}
+                  options={c.interesse}
                   value={form.interesse}
                   onChange={(v) => setField("interesse", v)}
                   light
                 />
               </div>
 
-              {form.interesse === "Gabinete privado" && (
+              {form.interesse && /gabinete/i.test(form.interesse) && (
                 <div>
-                  <div className={labelClass}>Para quantas pessoas</div>
+                  <div className={labelClass}>{c.gabineteLabel}</div>
                   <Chips
-                    options={GABINETE_OPTIONS}
+                    options={c.gabinete}
                     value={form.gabinete}
                     onChange={(v) => setField("gabinete", v)}
                     light
@@ -163,18 +152,18 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
               )}
 
               <div>
-                <div className={labelClass}>Quantos dias por semana</div>
-                <Chips options={DIAS_OPTIONS} value={form.dias} onChange={(v) => setField("dias", v)} light />
+                <div className={labelClass}>{c.diasLabel}</div>
+                <Chips options={c.dias} value={form.dias} onChange={(v) => setField("dias", v)} light />
               </div>
 
               <div className="max-w-sm">
-                <div className={labelClass}>Quando precisarias</div>
-                <SegmentedControl options={QUANDO_OPTIONS} value={form.quando} onChange={(v) => setField("quando", v)} light />
+                <div className={labelClass}>{c.quandoLabel}</div>
+                <SegmentedControl options={c.quando} value={form.quando} onChange={(v) => setField("quando", v)} light />
               </div>
 
               <div className="max-w-xs">
-                <div className={labelClass}>Precisas de cacifo?</div>
-                <SegmentedControl options={CACIFO_OPTIONS} value={form.cacifo} onChange={(v) => setField("cacifo", v)} light />
+                <div className={labelClass}>{c.cacifoLabel}</div>
+                <SegmentedControl options={c.cacifo} value={form.cacifo} onChange={(v) => setField("cacifo", v)} light />
               </div>
 
               <div
@@ -183,7 +172,7 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
               >
                 <div className={checkboxBase}>{form.sinalCheck ? "✓" : ""}</div>
                 <span className="text-pm-ink text-[15px] leading-snug">
-                  Quero reservar lugar com um sinal reembolsável de 20 €
+                  {c.sinalText}
                 </span>
               </div>
 
@@ -193,7 +182,7 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
               >
                 <div className={checkboxBase}>{form.privacyCheck ? "✓" : ""}</div>
                 <span className="text-pm-ink text-[15px] leading-snug">
-                  Aceito a política de privacidade
+                  {c.privacyText}
                 </span>
               </div>
 
@@ -207,7 +196,7 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
                 disabled={submitting}
                 className="bg-pm-ink text-pm-bg border-0 py-[18px] font-label font-bold text-sm tracking-[0.14em] uppercase cursor-pointer disabled:opacity-60 max-w-sm"
               >
-                {submitting ? "A enviar…" : "Reservar o meu lugar"}
+                {submitting ? "A enviar…" : c.submitText}
               </button>
             </div>
           </div>
@@ -216,9 +205,9 @@ export const ReservationForm = forwardRef<HTMLDivElement>(function ReservationFo
             <div className="flex justify-center mb-8">
               <BrandSymbol className="h-12 w-auto" />
             </div>
-            <h2 className="font-display text-pm-ink text-[36px] mb-5">Recebemos o teu pedido.</h2>
+            <h2 className="font-display text-pm-ink text-[36px] mb-5">{c.successTitle}</h2>
             <p className="text-pm-graphite text-lg leading-relaxed">
-              Entramos em contacto brevemente para tratar do resto. Até já.
+              {c.successText}
             </p>
           </div>
         )}

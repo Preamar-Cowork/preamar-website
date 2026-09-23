@@ -3,12 +3,7 @@
 import { motion, animate, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Folio } from "@/components/ui/Folio";
-
-const PLANS = [
-  { name: "FLEXÍVEL", target: 80, prefix: "", desc: "Secretária livre, horário de escritório.", highlight: false },
-  { name: "FIXO", target: 130, prefix: "", desc: "A tua secretária, sempre a mesma. Acesso alargado, cacifo incluído.", highlight: true },
-  { name: "GABINETE", target: 600, prefix: "desde ", desc: "Sala privada para 3 a 6 pessoas, com morada fiscal incluída.", highlight: false },
-];
+import type { SiteSections } from "@/lib/content/schema";
 
 function Price({ target }: { target: number }) {
   // counts up when the price scrolls into view (not on page load)
@@ -28,13 +23,13 @@ function Price({ target }: { target: number }) {
   return <span ref={ref}>{value}</span>;
 }
 
-export function Plans() {
+export function Plans({ content: c, n }: { content: SiteSections["plans"]; n: string }) {
   return (
     <section className="bg-pm-bg py-32 md:py-[180px] px-6">
       <div className="max-w-[1180px] mx-auto">
-        <Folio n="03" />
+        <Folio n={n} />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-16">
-          Planos
+          {c.label}
         </div>
         <motion.div
           initial={{ opacity: 0, y: 32 }}
@@ -43,25 +38,25 @@ export function Plans() {
           transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-pm-line"
         >
-          {PLANS.map((p) => (
+          {c.plans.map((p, i) => (
             <div
-              key={p.name}
+              key={i}
               className="px-6 md:px-12 py-12 md:py-16"
               style={{ background: p.highlight ? "#EAE7DF" : "transparent" }}
             >
               <div
-                className="font-label font-bold text-[13px] tracking-[0.15em] mb-8"
+                className="font-label font-bold text-[13px] tracking-[0.15em] uppercase mb-8"
                 style={{ color: p.highlight ? "#84A6B2" : "#7B8083" }}
               >
                 {p.name}
               </div>
               <div className="font-display text-[56px] leading-none text-pm-ink mb-3">
                 {p.prefix}
-                <Price target={p.target} />
+                <Price target={p.price} />
                 &nbsp;€
               </div>
               <div className="font-label text-[11px] tracking-[0.08em] uppercase text-pm-concrete mb-8">
-                /mês + IVA
+                {c.unit}
               </div>
               <p className="text-[15px] text-pm-graphite leading-relaxed m-0 max-w-[26ch]">{p.desc}</p>
             </div>

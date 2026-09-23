@@ -1,6 +1,17 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
+import {
+  Choice,
+  Field,
+  Panel,
+  ScaledPreview,
+  Slider,
+  inputCls,
+  labelCls,
+  readJson,
+  type SaveState,
+} from "@/components/admin/ui";
 import { Hero } from "@/components/sections/Hero";
 import type { HighTide } from "@/lib/tideFormat";
 import {
@@ -13,22 +24,7 @@ import {
   type OverlayColor,
 } from "@/lib/heroSettings";
 
-type SaveState = { kind: "idle" | "busy" | "done" | "error"; msg?: string };
-
-const labelCls = "font-label font-bold text-[11px] tracking-[0.15em] uppercase text-pm-concrete";
-const inputCls =
-  "w-full bg-transparent border-0 border-b border-pm-line focus:border-pm-ink focus:outline-none py-2.5 text-[16px] text-pm-ink font-body";
-
-async function readJson(res: Response) {
-  try {
-    return await res.json();
-  } catch {
-    const text = await res.text().catch(() => "");
-    throw new Error(`resposta inesperada do servidor (${res.status}): ${text.slice(0, 160)}`);
-  }
-}
-
-export default function AdminContentPage() {
+export default function AdminHeroPage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [settings, setSettings] = useState<HeroSettings>(HERO_DEFAULTS);
   const [saved, setSaved] = useState<HeroSettings>(HERO_DEFAULTS);
@@ -117,7 +113,7 @@ export default function AdminContentPage() {
             <span>Pré-visualização</span>
             {dirty && <span className="text-pm-sky">alterações por guardar</span>}
           </div>
-          <ScaledPreview>
+          <ScaledPreview height={810}>
             {loaded && <Hero contained videoUrl={videoUrl} settings={settings} tides={tides} />}
           </ScaledPreview>
           <div className="flex flex-wrap items-center gap-4 mt-6">
@@ -205,6 +201,14 @@ export default function AdminContentPage() {
           </Panel>
 
           <Panel title="Texto do hero">
+            <Field label="Linha por baixo do ícone (canto superior esquerdo)">
+              <input
+                className={inputCls}
+                value={settings.descriptor}
+                maxLength={80}
+                onChange={(e) => set("descriptor", e.target.value)}
+              />
+            </Field>
             <Field label="Frase-chave">
               <input
                 className={inputCls}
@@ -294,107 +298,6 @@ export default function AdminContentPage() {
           </Panel>
         </div>
       </div>
-    </div>
-  );
-}
-
-/** Renders children at a real 1440×810 desktop size, scaled to fit the column. */
-function ScaledPreview({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.5);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const ro = new ResizeObserver(() => setScale(el.clientWidth / 1440));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-  return (
-    <div ref={ref} className="relative w-full border border-pm-line bg-pm-ink overflow-hidden" style={{ height: 810 * scale }}>
-      <div className="absolute top-0 left-0 origin-top-left" style={{ width: 1440, height: 810, transform: `scale(${scale})` }}>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Panel({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="border border-pm-line bg-pm-bg p-6">
-      <div className={`${labelCls} mb-6 text-pm-ink`}>{title}</div>
-      <div className="flex flex-col gap-6">{children}</div>
-    </section>
-  );
-}
-
-function Field({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div>
-      <div className={`${labelCls} mb-2.5`}>{label}</div>
-      {children}
-    </div>
-  );
-}
-
-function Choice({
-  active,
-  onClick,
-  children,
-  wide = false,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: ReactNode;
-  wide?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`${wide ? "w-full text-left" : ""} whitespace-nowrap px-3.5 py-2.5 border font-label font-semibold text-[12px] tracking-[0.08em] uppercase transition-colors ${
-        active ? "bg-pm-ink text-pm-bg border-pm-ink" : "bg-transparent text-pm-ink border-pm-line hover:border-pm-ink"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Slider({
-  label,
-  value,
-  min,
-  max,
-  step = 1,
-  unit,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step?: number;
-  unit: string;
-  onChange: (v: number) => void;
-}) {
-  return (
-    <div>
-      <div className="flex justify-between items-baseline mb-1">
-        <span className={labelCls}>{label}</span>
-        <span className="font-label font-bold text-[13px] text-pm-ink tabular-nums">
-          {value}
-          {unit}
-        </span>
-      </div>
-      <input
-        type="range"
-        className="pm-range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
     </div>
   );
 }

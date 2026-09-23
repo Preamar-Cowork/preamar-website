@@ -12,6 +12,11 @@ export default async function Home() {
     getUpcomingHighTides().catch(() => []),
   ]);
   return (
-    <Landing heroVideoUrl={content.heroVideoUrl} heroSettings={content.heroSettings} tides={tides} />
+    <Landing
+      heroVideoUrl={content.heroVideoUrl}
+      heroSettings={content.heroSettings}
+      sections={content.sections}
+      tides={tides}
+    />
   );
 }

@@ -6,6 +6,7 @@ export type HeroTheme = "escuro" | "claro";
 export type OverlayColor = "offwhite" | "ardosia" | "azul";
 
 export type HeroSettings = {
+  descriptor: string; // small line under the icon, top-left
   theme: HeroTheme; // escuro = logo + texto ardósia; claro = logo + texto off-white
   logoWidth: number; // px, desktop (scales down on mobile)
   tagline: string;
@@ -18,6 +19,7 @@ export type HeroSettings = {
 };
 
 export const HERO_DEFAULTS: HeroSettings = {
+  descriptor: "Espaços de trabalho · Montijo",
   theme: "escuro",
   logoWidth: 560,
   tagline: "O teu escritório à beira-rio",
@@ -61,6 +63,7 @@ export function sanitizeHeroSettings(raw: unknown): HeroSettings {
   const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
   const d = HERO_DEFAULTS;
   return {
+    descriptor: str(r.descriptor, 80, d.descriptor),
     theme: oneOf(r.theme, ["escuro", "claro"] as const, d.theme),
     logoWidth: clamp(r.logoWidth, 160, 1000, d.logoWidth),
     tagline: str(r.tagline, 140, d.tagline),
