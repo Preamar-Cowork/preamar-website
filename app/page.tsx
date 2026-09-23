@@ -1,0 +1,36 @@
+"use client";
+
+import { useRef } from "react";
+import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
+import { Problem } from "@/components/sections/Problem";
+import { Space } from "@/components/sections/Space";
+import { Plans } from "@/components/sections/Plans";
+import { Fiscal } from "@/components/sections/Fiscal";
+import { NextPhase } from "@/components/sections/NextPhase";
+import { ReservationForm } from "@/components/sections/ReservationForm";
+import { FAQ } from "@/components/sections/FAQ";
+import { Footer } from "@/components/layout/Footer";
+
+export default function Home() {
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const scrollToForm = () => {
+    formRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
+      <Hero onReserve={scrollToForm} />
+      <About />
+      <Problem />
+      <Space />
+      <Plans />
+      <Fiscal />
+      <NextPhase />
+      <ReservationForm ref={formRef} />
+      <FAQ />
+      <Footer />
+    </main>
+  );
+}
