@@ -6,13 +6,13 @@ import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
-const OFFSETS = [0, 96, 32]; // asymmetric editorial rhythm
+const OFFSETS = [0, 64, 24]; // asymmetric editorial rhythm
 
 export function Problem({ content: c, n }: { content: SiteSections["problem"]; n: string }) {
   return (
-    <section className="max-w-[1320px] mx-auto py-32 md:py-[180px] px-6 md:px-12">
+    <section className="max-w-[1320px] mx-auto py-20 md:py-28 px-6 md:px-12">
       <Folio n={n} />
-      <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-20">
+      <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12">
         {c.label}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">

@@ -79,7 +79,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
   }
 
   return (
-    <section id="reserva-form" ref={ref} className="bg-pm-bgAlt py-32 md:py-[180px] px-6">
+    <section id="reserva-form" ref={ref} className="bg-pm-bgAlt py-20 md:py-28 px-6">
       <div className="max-w-[1180px] mx-auto">
         {!submitted ? (
           <div className="grid grid-cols-1 md:grid-cols-[35%_65%] gap-16">

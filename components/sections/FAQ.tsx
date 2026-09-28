@@ -8,7 +8,7 @@ export function FAQ({ content: c, n }: { content: SiteSections["faq"]; n: string
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section className="py-32 md:py-[180px] px-6">
+    <section className="py-20 md:py-28 px-6">
       <div className="max-w-[720px] mx-auto">
         <Folio n={n} />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-10">

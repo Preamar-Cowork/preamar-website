@@ -10,7 +10,7 @@ export function Space({ content: c, n }: { content: SiteSections["space"]; n: st
     <section className="bg-pm-ink">
       <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
         <PhotoPlaceholder dark src={c.image || undefined} alt={c.label} className="h-[420px] md:h-full md:min-h-[720px]" />
-        <div className="py-16 md:py-24 px-8 md:px-14 flex flex-col justify-center">
+        <div className="py-14 md:py-20 px-8 md:px-14 flex flex-col justify-center">
           <Folio n={n} dark />
           <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-6">
             {c.label}
