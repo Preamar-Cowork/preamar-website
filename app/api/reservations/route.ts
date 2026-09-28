@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     quando: body.quando ?? null,
     cacifo: body.cacifo ?? null,
     sinal_aceite: !!body.sinalCheck,
+    sinal_valor: Number.isFinite(Number(body.sinalValor)) && body.sinalValor !== null ? Number(body.sinalValor) : null,
     privacy_aceite: !!body.privacyCheck,
   };
 
@@ -31,7 +32,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, persisted: false });
   }
 
-  const { error } = await supabase.from("reservations").insert(record);
+  let { error } = await supabase.from("reservations").insert(record);
+  // migration 006 (sinal_valor) not run yet → still save the reservation without it
+  if (error && /sinal_valor/.test(error.message)) {
+    const { sinal_valor: _omit, ...rest } = record;
+    void _omit;
+    ({ error } = await supabase.from("reservations").insert(rest));
+  }
   if (error) {
     console.error("[preamar] Supabase insert failed:", error.message);
     return NextResponse.json({ error: "insert_failed" }, { status: 500 });

@@ -49,6 +49,9 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const isOffice = !!form.interesse && /gabinete/i.test(form.interesse);
+  const sinalValor = isOffice ? c.sinalAmountOffice : c.sinalAmount;
+
   const setField = <K extends keyof FormState>(key: K, val: FormState[K]) =>
     setForm((s) => ({ ...s, [key]: val }));
 
@@ -67,7 +70,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
       const res = await fetch("/api/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, sinalValor: form.sinalCheck ? sinalValor : null }),
       });
       if (!res.ok) throw new Error("request_failed");
       setSubmitted(true);
@@ -166,15 +169,49 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
                 <SegmentedControl options={c.cacifo} value={form.cacifo} onChange={(v) => setField("cacifo", v)} light />
               </div>
 
-              <div
+              {/* reserva com sinal — valor maior para gabinetes */}
+              <button
+                type="button"
+                role="checkbox"
+                aria-checked={form.sinalCheck}
                 onClick={() => setField("sinalCheck", !form.sinalCheck)}
-                className="flex gap-3.5 items-start cursor-pointer border-t border-pm-line pt-8"
+                className={`mt-4 w-full text-left grid grid-cols-[auto_1fr] gap-5 md:gap-7 items-start p-6 md:p-7 border transition-colors ${
+                  form.sinalCheck ? "border-pm-ink bg-pm-bg shadow-[inset_0_0_0_1px_#3F4346]" : "border-pm-line bg-pm-bg/60 hover:border-pm-ink/60"
+                }`}
               >
-                <div className={checkboxBase}>{form.sinalCheck ? "✓" : ""}</div>
-                <span className="text-pm-ink text-[15px] leading-snug">
-                  {c.sinalText}
-                </span>
-              </div>
+                <div className="text-center">
+                  <div className="font-display text-[44px] md:text-[52px] leading-none text-pm-ink whitespace-nowrap">
+                    <span key={sinalValor} className="inline-block animate-[pm-pop_.35s_ease-out]">
+                      {sinalValor}
+                    </span>
+                    <span className="text-[0.6em]">&nbsp;€</span>
+                  </div>
+                  <div className="font-label font-semibold text-[10px] tracking-[0.14em] uppercase text-pm-concrete mt-2">
+                    sinal
+                  </div>
+                </div>
+                <div>
+                  <div className="font-label font-bold text-[11px] tracking-[0.15em] uppercase text-pm-sky mb-2">
+                    {c.sinalLabel}
+                  </div>
+                  <div className="flex gap-3 items-start">
+                    <span
+                      className={`w-[22px] h-[22px] shrink-0 border flex items-center justify-center text-[13px] mt-0.5 transition-colors ${
+                        form.sinalCheck ? "bg-pm-ink border-pm-ink text-pm-bg" : "border-pm-ink text-transparent"
+                      }`}
+                      aria-hidden="true"
+                    >
+                      ✓
+                    </span>
+                    <span className="font-body font-bold text-[17px] md:text-[18px] leading-snug text-pm-ink">
+                      {(isOffice ? c.sinalTitleOffice : c.sinalTitle).replace("{valor}", `${sinalValor} €`)}
+                    </span>
+                  </div>
+                  {c.sinalDesc && (
+                    <p className="text-pm-graphite text-[14px] leading-relaxed mt-3 mb-0 max-w-[52ch]">{c.sinalDesc}</p>
+                  )}
+                </div>
+              </button>
 
               <div
                 onClick={() => setField("privacyCheck", !form.privacyCheck)}

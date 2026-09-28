@@ -58,6 +58,11 @@ input[type="range"].pm-range::-moz-range-thumb {
   cursor: pointer;
 }
 
+@keyframes pm-pop {
+  0% { transform: translateY(6px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
 @keyframes pm-scroll-dot {
   0% { transform: translateY(0); opacity: 0.9; }
   50% { transform: translateY(10px); opacity: 0.3; }
