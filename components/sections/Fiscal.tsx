@@ -7,9 +7,9 @@ export function Fiscal({ content: c }: { content: SiteSections["fiscal"] }) {
   return (
     <section className="bg-pm-ink py-20 md:py-28 px-6">
       <div className="max-w-[760px] mx-auto text-center">
-        <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-8">
+        <h2 className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-8 mt-0">
           {c.label}
-        </div>
+        </h2>
         <RevealLines
           key={c.headline}
           as="p"

@@ -10,23 +10,23 @@ export function Space({ content: c }: { content: SiteSections["space"] }) {
       <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
         <PhotoPlaceholder dark src={c.image || undefined} alt={c.label} className="h-[420px] md:h-full md:min-h-[720px]" />
         <div className="py-14 md:py-20 px-8 md:px-14 flex flex-col justify-center">
-          <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-6">
+          <h2 className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-6 mt-0">
             {c.label}
-          </div>
+          </h2>
           <Reveal>
             <p className="font-body text-lg md:text-[21px] leading-[1.6] text-pm-bg max-w-[440px] mb-12">{c.text}</p>
           </Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 m-0 p-0 list-none">
             {c.amenities.map((a, i) => (
-              <div
+              <li
                 key={i}
                 className="flex items-baseline gap-2.5 py-3 border-t border-white/15 text-[15px] text-pm-bg"
               >
-                <span className="text-pm-sky">—</span>
+                <span aria-hidden="true" className="text-pm-sky">—</span>
                 <span>{a}</span>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </div>
     </section>

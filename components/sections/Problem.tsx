@@ -10,9 +10,9 @@ const OFFSETS = [0, 64, 24]; // asymmetric editorial rhythm
 export function Problem({ content: c }: { content: SiteSections["problem"] }) {
   return (
     <section className="max-w-[1320px] mx-auto py-20 md:py-28 px-6 md:px-12">
-      <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12">
+      <h2 className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12 mt-0">
         {c.label}
-      </div>
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
         {c.blocks.map((b, i) => (
           <motion.div
@@ -29,9 +29,9 @@ export function Problem({ content: c }: { content: SiteSections["problem"] }) {
             </div>
             <RevealLines
               key={b.title}
-              as="div"
+              as="h3"
               lines={b.title.split("\n")}
-              className="font-body font-bold text-2xl md:text-[26px] leading-[1.15] mb-4 text-pm-ink"
+              className="font-body font-bold text-2xl md:text-[26px] leading-[1.15] mt-0 mb-4 text-pm-ink"
             />
             {b.text && <p className="text-pm-graphite text-base leading-relaxed mb-6 max-w-[38ch]">{b.text}</p>}
             <PhotoPlaceholder src={b.image || undefined} caption={b.caption} className="h-[190px] md:h-[220px]" />

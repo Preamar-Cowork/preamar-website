@@ -59,12 +59,12 @@ function PlanCard({
       className="md:row-span-6 grid md:grid-rows-subgrid px-6 md:px-10 py-10 md:py-12 gap-y-0"
       style={{ background: p.highlight ? "#EAE7DF" : "transparent" }}
     >
-      <div
-        className="font-label font-bold text-[13px] tracking-[0.15em] uppercase mb-4"
+      <h3
+        className="font-label font-bold text-[13px] tracking-[0.15em] uppercase mt-0 mb-4"
         style={{ color: p.highlight ? "#84A6B2" : "#7B8083" }}
       >
         {p.name}
-      </div>
+      </h3>
 
       <p className="text-[15px] text-pm-graphite leading-relaxed m-0 mb-6 max-w-[30ch]">{p.desc}</p>
 
@@ -155,9 +155,9 @@ export function Plans({ content: c }: { content: SiteSections["plans"] }) {
   return (
     <section className="bg-pm-bg py-20 md:py-28 px-6">
       <div className="max-w-[1180px] mx-auto">
-        <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12">
+        <h2 className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12 mt-0">
           {c.label}
-        </div>
+        </h2>
         <motion.div
           initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}

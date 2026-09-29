@@ -1,6 +1,7 @@
 import { Landing } from "@/components/Landing";
 import { getSiteContent } from "@/lib/siteContent";
 import { getUpcomingHighTides } from "@/lib/tide";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 // Read the hero video + settings on every request, so changes saved in
 // /admin show up immediately (and with no flash of default values).
@@ -12,11 +13,14 @@ export default async function Home() {
     getUpcomingHighTides().catch(() => []),
   ]);
   return (
-    <Landing
-      heroVideoUrl={content.heroVideoUrl}
-      heroSettings={content.heroSettings}
-      sections={content.sections}
-      tides={tides}
-    />
+    <>
+      <JsonLd sections={content.sections} />
+      <Landing
+        heroVideoUrl={content.heroVideoUrl}
+        heroSettings={content.heroSettings}
+        sections={content.sections}
+        tides={tides}
+      />
+    </>
   );
 }

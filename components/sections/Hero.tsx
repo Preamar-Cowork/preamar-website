@@ -86,6 +86,8 @@ export function Hero({
             loop
             playsInline
             preload="auto"
+            aria-hidden="true"
+            tabIndex={-1}
           />
         ) : (
           <PhotoPlaceholder dark className="absolute inset-0 h-full w-full" />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_METADATA, SITE_VIEWPORT } from "@/lib/seo";
 import { Libre_Caslon_Display, Libre_Caslon_Text, Archivo_Narrow } from "next/font/google";
 import "./globals.css";
 
@@ -23,15 +24,12 @@ const archivoNarrow = Archivo_Narrow({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "PREAMAR — Cowork e Escritórios no Montijo",
-  description:
-    "Cowork e escritórios no Montijo, junto ao estuário do Tejo. Secretárias, gabinetes privados e sala de reuniões — a dez minutos de Alcochete, sem ponte.",
-};
+export const metadata: Metadata = SITE_METADATA;
+export const viewport = SITE_VIEWPORT;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt">
+    <html lang="pt-PT">
       <body
         className={`${caslonDisplay.variable} ${caslonText.variable} ${archivoNarrow.variable} font-body`}
       >
