@@ -25,7 +25,7 @@ export const HERO_DEFAULTS: HeroSettings = {
   tagline: "O teu escritório à beira-rio",
   taglineFont: "body",
   taglineSize: 56,
-  subtitle: "",
+  subtitle: "Cowork no Montijo — secretárias, gabinetes privados e morada fiscal.",
   ctaText: "Reservar o meu lugar",
   overlayColor: "offwhite",
   overlayOpacity: 15,

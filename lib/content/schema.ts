@@ -50,7 +50,7 @@ export const DEFAULT_SECTIONS = {
     ],
   },
   plans: {
-    label: "Planos",
+    label: "Planos e preços",
     unit: "por mês, IVA incluído",
     plans: [
       {
@@ -110,8 +110,8 @@ export const DEFAULT_SECTIONS = {
     ],
   },
   fiscal: {
-    label: "Morada fiscal",
-    headline: "Sede da tua empresa\na partir de 25 €/mês + IVA.",
+    label: "Morada fiscal e domiciliação de empresas",
+    headline: "Sede da tua empresa\n30 € por mês, IVA incluído",
     text: "Receção de correio e encomendas, digitalização e aviso por email.",
   },
   about: {
@@ -172,6 +172,14 @@ export const DEFAULT_SECTIONS = {
         a: "Sim. O sinal — 20 € para secretárias, 100 € para gabinetes — é totalmente reembolsável se decidires não avançar.",
       },
       { q: "Posso mudar de plano?", a: "Sim, os planos podem ser ajustados às tuas necessidades." },
+      {
+        q: "Posso usar a PREAMAR como sede da minha empresa?",
+        a: "Sim. A morada fiscal custa 30 € por mês, IVA incluído, e já vem incluída nos gabinetes. Inclui receção de correio e encomendas, digitalização e aviso por email.",
+      },
+      {
+        q: "Quanto custa um cowork no Montijo?",
+        a: "Na PREAMAR, uma secretária flexível custa 12 € por dia, 45 € por semana ou 90 € por mês; uma secretária fixa 150 € por mês; e um gabinete privado desde 400 € por mês para 2 pessoas. Todos os preços têm IVA incluído.",
+      },
     ],
   },
   footer: {
