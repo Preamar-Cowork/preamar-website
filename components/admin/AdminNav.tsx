@@ -2,15 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SECTION_DEFS, folioOf } from "@/lib/content/schema";
+import { SECTION_DEFS } from "@/lib/content/schema";
 
 const ITEMS = [
-  { href: "/admin/hero", title: "Hero", n: "" },
-  ...SECTION_DEFS.map((d) => ({
-    href: `/admin/${d.key}`,
-    title: d.title,
-    n: d.key === "footer" ? "" : folioOf(d.key),
-  })),
+  { href: "/admin/hero", title: "Hero" },
+  ...SECTION_DEFS.map((d) => ({ href: `/admin/${d.key}`, title: d.title })),
 ];
 
 /** Admin menu — one entry per part of the page, in site order. */
@@ -33,7 +29,6 @@ export function AdminNav() {
                 : "border-transparent text-pm-concrete hover:text-pm-ink"
             }`}
           >
-            <span className="w-4 text-[10px] opacity-60 tabular-nums">{it.n}</span>
             {it.title}
           </Link>
         );

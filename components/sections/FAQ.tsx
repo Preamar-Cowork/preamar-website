@@ -1,16 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
-export function FAQ({ content: c, n }: { content: SiteSections["faq"]; n: string }) {
+export function FAQ({ content: c }: { content: SiteSections["faq"] }) {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
     <section className="py-20 md:py-28 px-6">
       <div className="max-w-[720px] mx-auto">
-        <Folio n={n} />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-10">
           {c.label}
         </div>

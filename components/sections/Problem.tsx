@@ -3,15 +3,13 @@
 import { motion } from "framer-motion";
 import { RevealLines } from "@/components/ui/RevealLines";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
-import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
 const OFFSETS = [0, 64, 24]; // asymmetric editorial rhythm
 
-export function Problem({ content: c, n }: { content: SiteSections["problem"]; n: string }) {
+export function Problem({ content: c }: { content: SiteSections["problem"] }) {
   return (
     <section className="max-w-[1320px] mx-auto py-20 md:py-28 px-6 md:px-12">
-      <Folio n={n} />
       <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12">
         {c.label}
       </div>

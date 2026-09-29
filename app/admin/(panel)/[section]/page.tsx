@@ -7,7 +7,6 @@ import { SectionPreview } from "@/components/admin/SectionPreview";
 import { Panel, SaveBar, ScaledPreview, labelCls, readJson, type SaveState } from "@/components/admin/ui";
 import {
   DEFAULT_SECTIONS,
-  folioOf,
   getSectionDef,
   sanitizeSection,
   type SectionKey,
@@ -65,11 +64,9 @@ export default function SectionEditorPage({ params }: { params: { section: strin
     }
   }
 
-  const n = key === "footer" ? "" : folioOf(key);
-
   return (
     <div className="pb-24">
-      <div className={`${labelCls} mb-3`}>{n ? `Secção ${n}` : "Página inicial"}</div>
+      <div className={`${labelCls} mb-3`}>Página inicial</div>
       <h1 className="font-display text-[32px] text-pm-ink mb-2">{def.title}</h1>
       <p className="text-pm-graphite text-[15px] mb-10 max-w-[60ch]">
         As alterações aparecem logo na pré-visualização. Só vão para o site quando carregares em{" "}

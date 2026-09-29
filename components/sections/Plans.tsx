@@ -2,7 +2,6 @@
 
 import { motion, animate, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -152,11 +151,10 @@ function PlanCard({
   );
 }
 
-export function Plans({ content: c, n }: { content: SiteSections["plans"]; n: string }) {
+export function Plans({ content: c }: { content: SiteSections["plans"] }) {
   return (
     <section className="bg-pm-bg py-20 md:py-28 px-6">
       <div className="max-w-[1180px] mx-auto">
-        <Folio n={n} />
         <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-concrete mb-12">
           {c.label}
         </div>

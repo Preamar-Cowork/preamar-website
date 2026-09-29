@@ -4,7 +4,6 @@ import { BrandSymbol, Lockup } from "@/components/brand/Brand";
 import { forwardRef, useState } from "react";
 import { Chips } from "@/components/ui/Chips";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
-import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
 type FormState = {
@@ -41,9 +40,9 @@ const labelClass = "font-label font-bold text-[11px] tracking-[0.15em] uppercase
 const checkboxBase =
   "w-[18px] h-[18px] border border-pm-ink flex-shrink-0 flex items-center justify-center text-[11px] text-pm-ink mt-0.5";
 
-type Props = { content: SiteSections["form"]; n: string };
+type Props = { content: SiteSections["form"] };
 
-export const ReservationForm = forwardRef<HTMLDivElement, Props>(function ReservationForm({ content: c, n }, ref) {
+export const ReservationForm = forwardRef<HTMLDivElement, Props>(function ReservationForm({ content: c }, ref) {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -88,7 +87,6 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
           <div className="grid grid-cols-1 md:grid-cols-[35%_65%] gap-16">
             <div>
               <div className="md:sticky md:top-24">
-                <Folio n={n} />
                 <Lockup size={18} className="mb-8" />
                 <h2 className="font-display text-[34px] md:text-[42px] leading-[1.05] text-pm-ink mb-6">
                   {c.heading}

@@ -2,16 +2,14 @@
 
 import { Reveal } from "@/components/ui/Reveal";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
-import { Folio } from "@/components/ui/Folio";
 import type { SiteSections } from "@/lib/content/schema";
 
-export function Space({ content: c, n }: { content: SiteSections["space"]; n: string }) {
+export function Space({ content: c }: { content: SiteSections["space"] }) {
   return (
     <section className="bg-pm-ink">
       <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
         <PhotoPlaceholder dark src={c.image || undefined} alt={c.label} className="h-[420px] md:h-full md:min-h-[720px]" />
         <div className="py-14 md:py-20 px-8 md:px-14 flex flex-col justify-center">
-          <Folio n={n} dark />
           <div className="font-label font-bold text-[11px] tracking-[0.16em] uppercase text-pm-sky mb-6">
             {c.label}
           </div>

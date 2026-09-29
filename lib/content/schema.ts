@@ -118,12 +118,6 @@ export const DEFAULT_SECTIONS = {
     label: "O que é Preamar",
     text: "Preamar é a maré cheia — o ponto mais alto, quando a água chega ao máximo e fica parada uns minutos antes de virar. Acontece duas vezes por dia no estuário aqui ao lado. É a janela em que os barcos entram e saem. Pareceu-nos um bom nome para um sítio onde o trabalho tem finalmente condições.",
   },
-  next: {
-    label: "O que vem a seguir",
-    text: "Este é o primeiro espaço, não o único. O plano é crescer para um edifício maior, com salas de conferência e estúdios de gravação. Quem entra agora entra no início.",
-    image: "",
-    caption: "render, fase 2",
-  },
   form: {
     heading: "Diz-nos o que precisas.",
     text: "Respondemos em menos de 24 horas úteis e combinamos uma visita ao espaço.",
@@ -338,16 +332,6 @@ export const SECTION_DEFS: SectionDef[] = [
     ],
   },
   {
-    key: "next",
-    title: "O que vem a seguir",
-    fields: [
-      { key: "label", label: "Título da secção", type: "text" },
-      { key: "text", label: "Texto", type: "textarea", rows: 5 },
-      { key: "image", label: "Imagem", type: "image", help: IMG_HELP },
-      { key: "caption", label: "Legenda da imagem", type: "text" },
-    ],
-  },
-  {
     key: "form",
     title: "Reserva",
     fields: [
@@ -501,6 +485,3 @@ export function sanitizeSections(raw: unknown): SiteSections {
   for (const key of SECTION_KEYS) out[key] = sanitizeSection(key, src[key]);
   return out as SiteSections;
 }
-
-/** "01", "02"… — the section's position on the page. */
-export const folioOf = (key: SectionKey) => String(SECTION_KEYS.indexOf(key) + 1).padStart(2, "0");
