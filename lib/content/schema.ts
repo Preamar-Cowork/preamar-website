@@ -189,6 +189,7 @@ export const DEFAULT_SECTIONS = {
   },
   footer: {
     place: "Montijo",
+    mapsUrl: "",
     email: "ola@preamar.pt",
     phone: "+351 210 000 000",
     instagram: "@preamar.montijo",
@@ -418,10 +419,11 @@ export const SECTION_DEFS: SectionDef[] = [
     key: "footer",
     title: "Rodapé",
     fields: [
-      { key: "place", label: "Local", type: "text" },
-      { key: "email", label: "Email", type: "text" },
-      { key: "phone", label: "Telefone", type: "text" },
-      { key: "instagram", label: "Instagram", type: "text" },
+      { key: "place", label: "Local / morada", type: "text", help: "Ao clicar, abre no mapa (Apple Maps no iPhone/Mac, a app de mapas no Android, Google Maps no resto)." },
+      { key: "mapsUrl", label: "Link do mapa (opcional)", type: "text", help: "Se preencheres (ex.: o link do Perfil de Empresa no Google Maps), o local abre sempre este link." },
+      { key: "email", label: "Email", type: "text", help: "Ao clicar, abre o email." },
+      { key: "phone", label: "Telefone", type: "text", help: "Ao clicar, liga (no telemóvel)." },
+      { key: "instagram", label: "Instagram", type: "text", help: "@utilizador ou link — ao clicar, abre o Instagram." },
       { key: "note", label: "Nota final", type: "text" },
     ],
   },
