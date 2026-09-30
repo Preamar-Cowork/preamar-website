@@ -160,7 +160,7 @@ export function Hero({
         {s.subtitle && (
           <motion.p
             {...fadeUp(0.6)}
-            className="font-body text-[16px] md:text-[19px] leading-[1.6] max-w-[560px] mt-5 opacity-90 [text-wrap:balance]"
+            className="font-body text-[16px] md:text-[19px] leading-[1.6] max-w-[1000px] mt-5 opacity-90"
           >
             {s.subtitle}
           </motion.p>

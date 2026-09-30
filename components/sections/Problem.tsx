@@ -34,7 +34,7 @@ export function Problem({ content: c }: { content: SiteSections["problem"] }) {
               className="font-body font-bold text-2xl md:text-[26px] leading-[1.15] mt-0 mb-4 text-pm-ink"
             />
             {b.text && <p className="text-pm-graphite text-base leading-relaxed mb-6 max-w-[38ch]">{b.text}</p>}
-            <PhotoPlaceholder src={b.image || undefined} caption={b.caption} className="h-[190px] md:h-[220px]" />
+            <PhotoPlaceholder src={b.image || undefined} caption={b.caption} alt={b.alt} className="h-[190px] md:h-[220px]" />
           </motion.div>
         ))}
       </div>

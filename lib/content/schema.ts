@@ -17,18 +17,21 @@ export const DEFAULT_SECTIONS = {
         text: "Trabalhas ao lado do berço, com a máquina de lavar a três metros.",
         image: "",
         caption: "escritório improvisado em casa",
+        alt: "",
       },
       {
         title: "A ponte come-te\nduas horas por dia.",
         text: "E o teu trabalho podia ser feito a dez minutos de casa.",
         image: "",
         caption: "trânsito na ponte, hora de ponta",
+        alt: "",
       },
       {
         title: "Receber um cliente\nna cozinha não é\nreceber um cliente.",
         text: "",
         image: "",
         caption: "reunião improvisada",
+        alt: "",
       },
     ],
   },
@@ -36,6 +39,7 @@ export const DEFAULT_SECTIONS = {
     label: "O espaço",
     text: "Um espaço no Montijo pensado para trabalhar bem: luz natural em todas as salas, e a maré do estuário a dois passos da porta.",
     image: "",
+    imageAlt: "",
     amenities: [
       "Secretárias fixas e flexíveis",
       "Gabinetes privados",
@@ -111,7 +115,8 @@ export const DEFAULT_SECTIONS = {
   },
   fiscal: {
     label: "Morada fiscal e domiciliação de empresas",
-    headline: "Sede da tua empresa\n30 € por mês, IVA incluído",
+    price: 30,
+    headline: "Sede da tua empresa\n{morada-fiscal} por mês, IVA incluído",
     text: "Receção de correio e encomendas, digitalização e aviso por email.",
   },
   about: {
@@ -169,16 +174,16 @@ export const DEFAULT_SECTIONS = {
       { q: "Posso visitar antes?", a: "Sim, marcamos uma visita ao espaço antes de decidires." },
       {
         q: "O sinal é mesmo reembolsável?",
-        a: "Sim. O sinal — 20 € para secretárias, 100 € para gabinetes — é totalmente reembolsável se decidires não avançar.",
+        a: "Sim. O sinal — {sinal} para secretárias, {sinal-gabinete} para gabinetes — é totalmente reembolsável se decidires não avançar.",
       },
       { q: "Posso mudar de plano?", a: "Sim, os planos podem ser ajustados às tuas necessidades." },
       {
         q: "Posso usar a PREAMAR como sede da minha empresa?",
-        a: "Sim. A morada fiscal custa 30 € por mês, IVA incluído, e já vem incluída nos gabinetes. Inclui receção de correio e encomendas, digitalização e aviso por email.",
+        a: "Sim. A morada fiscal custa {morada-fiscal} por mês, IVA incluído, e já vem incluída nos gabinetes. Inclui receção de correio e encomendas, digitalização e aviso por email.",
       },
       {
         q: "Quanto custa um cowork no Montijo?",
-        a: "Na PREAMAR, uma secretária flexível custa 12 € por dia, 45 € por semana ou 90 € por mês; uma secretária fixa 150 € por mês; e um gabinete privado desde 400 € por mês para 2 pessoas. Todos os preços têm IVA incluído.",
+        a: "Na PREAMAR, uma secretária flexível custa {flexivel-dia} por dia, {flexivel-semana} por semana ou {flexivel-mes} por mês; uma secretária fixa {fixo} por mês; e um gabinete privado desde {gabinete-2} por mês para 2 pessoas. Todos os preços têm IVA incluído.",
       },
     ],
   },
@@ -219,6 +224,7 @@ export type SectionDef = { key: SectionKey; title: string; fields: Field[] };
 
 const LINES_HELP = "Cada linha aqui é uma linha no site.";
 const IMG_HELP = "JPG ou PNG, idealmente 2000 px de largura e menos de 1 MB.";
+const ALT_HELP = "Descreve o que se vê, com o sítio: ex. “secretárias com luz natural no cowork PREAMAR, Montijo”.";
 
 /** In site order — also drives the admin menu. */
 export const SECTION_DEFS: SectionDef[] = [
@@ -237,7 +243,8 @@ export const SECTION_DEFS: SectionDef[] = [
           { key: "title", label: "Título", type: "lines", help: LINES_HELP },
           { key: "text", label: "Texto", type: "textarea", rows: 3 },
           { key: "image", label: "Imagem", type: "image", help: IMG_HELP },
-          { key: "caption", label: "Legenda da imagem", type: "text" },
+          { key: "caption", label: "Legenda (aparece por baixo da imagem)", type: "text" },
+          { key: "alt", label: "Descrição da imagem (Google e leitores de ecrã)", type: "text", help: ALT_HELP },
         ],
       },
     ],
@@ -249,6 +256,7 @@ export const SECTION_DEFS: SectionDef[] = [
       { key: "label", label: "Título da secção", type: "text" },
       { key: "text", label: "Texto", type: "textarea", rows: 4 },
       { key: "image", label: "Imagem grande (esquerda)", type: "image", help: IMG_HELP },
+      { key: "imageAlt", label: "Descrição da imagem (Google e leitores de ecrã)", type: "text", help: ALT_HELP },
       { key: "amenities", label: "Lista de comodidades", type: "strings", itemLabel: "Comodidade", max: 20 },
     ],
   },
@@ -327,6 +335,7 @@ export const SECTION_DEFS: SectionDef[] = [
     title: "Morada fiscal",
     fields: [
       { key: "label", label: "Título da secção", type: "text" },
+      { key: "price", label: "Preço da morada fiscal (€)", type: "number", min: 0, max: 10000, help: "Usado em todo o site como {morada-fiscal}." },
       { key: "headline", label: "Frase grande", type: "lines", help: LINES_HELP },
       { key: "text", label: "Texto", type: "textarea", rows: 2 },
     ],

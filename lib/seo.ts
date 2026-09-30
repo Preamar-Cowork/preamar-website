@@ -7,6 +7,10 @@ export const SITE_TITLE = "Cowork no Montijo — Secretárias, Gabinetes e Morad
 export const SITE_DESCRIPTION =
   "Cowork no Montijo, junto ao Tejo: secretárias desde 12 €/dia, gabinetes privados e morada fiscal. A dez minutos de Alcochete, sem ponte. Reserva o teu lugar.";
 
+/** Same description, with the day-pass price taken live from /admin → Planos. */
+export const SITE_DESCRIPTION_TEMPLATE =
+  "Cowork no Montijo, junto ao Tejo: secretárias desde {flexivel-dia}/dia, gabinetes privados e morada fiscal. A dez minutos de Alcochete, sem ponte. Reserva o teu lugar.";
+
 export const SITE_METADATA: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: "%s | PREAMAR" }, // home uses the full title as-is

@@ -1,15 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { notFound } from "next/navigation";
 import { FieldEditor } from "@/components/admin/FieldEditor";
 import { SectionPreview } from "@/components/admin/SectionPreview";
 import { Panel, SaveBar, ScaledPreview, labelCls, readJson, type SaveState } from "@/components/admin/ui";
+import { TokenHelp } from "@/components/admin/TokenHelp";
+import { applyTokens, priceTokenList } from "@/lib/content/tokens";
 import {
   DEFAULT_SECTIONS,
   getSectionDef,
   sanitizeSection,
+  sanitizeSections,
   type SectionKey,
+  type SiteSections,
 } from "@/lib/content/schema";
 
 type Obj = Record<string, unknown>;
@@ -22,12 +26,14 @@ export default function SectionEditorPage({ params }: { params: { section: strin
   const [draft, setDraft] = useState<Obj>(() => sanitizeSection(key, null) as Obj);
   const [saved, setSaved] = useState<Obj>(draft);
   const [loaded, setLoaded] = useState(false);
+  const [all, setAll] = useState<SiteSections>(() => sanitizeSections(null)); // other sections, for price variables
   const [save, setSave] = useState<SaveState>({ kind: "idle" });
 
   useEffect(() => {
     fetch("/api/content", { cache: "no-store" })
       .then((r) => r.json())
       .then((data) => {
+        setAll(sanitizeSections(data?.sections));
         const s = sanitizeSection(key, data?.sections?.[key]) as Obj;
         setDraft(s);
         setSaved(s);
@@ -37,6 +43,13 @@ export default function SectionEditorPage({ params }: { params: { section: strin
   }, [key]);
 
   const dirty = JSON.stringify(draft) !== JSON.stringify(saved);
+
+  // price variables from the saved content — or from this draft when editing Planos/Morada/Reserva
+  const tokenList = useMemo(() => priceTokenList({ ...all, [key]: draft } as SiteSections), [all, key, draft]);
+  const previewContent = useMemo(
+    () => applyTokens(draft, Object.fromEntries(tokenList.map((t) => [t.token, t.value]))),
+    [draft, tokenList]
+  );
 
   // warn before leaving with unsaved changes
   useEffect(() => {
@@ -58,6 +71,7 @@ export default function SectionEditorPage({ params }: { params: { section: strin
       if (!res.ok) throw new Error(data?.error || `erro ${res.status}`);
       setDraft(data.data);
       setSaved(data.data);
+      setAll((a) => ({ ...a, [key]: data.data }));
       setSave({ kind: "done", msg: "Guardado — já está no site." });
     } catch (e) {
       setSave({ kind: "error", msg: e instanceof Error ? e.message : String(e) });
@@ -80,7 +94,7 @@ export default function SectionEditorPage({ params }: { params: { section: strin
             {dirty && <span className="text-pm-sky">alterações por guardar</span>}
           </div>
           <div className="xl:max-h-[calc(100vh-220px)] overflow-auto">
-            <ScaledPreview>{loaded && <SectionPreview sectionKey={key} content={draft} />}</ScaledPreview>
+            <ScaledPreview>{loaded && <SectionPreview sectionKey={key} content={previewContent} />}</ScaledPreview>
           </div>
           <div className="mt-6">
             <SaveBar
@@ -96,6 +110,7 @@ export default function SectionEditorPage({ params }: { params: { section: strin
           </div>
         </div>
 
+        <div className="flex flex-col gap-6">
         <Panel title="Conteúdo">
           {def.fields.map((f) => (
             <FieldEditor
@@ -109,6 +124,8 @@ export default function SectionEditorPage({ params }: { params: { section: strin
             />
           ))}
         </Panel>
+        <TokenHelp tokens={tokenList} />
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import { SECTION_DEFS } from "@/lib/content/schema";
 const PAGE_ITEMS = [
   { href: "/admin/hero", title: "Hero" },
   ...SECTION_DEFS.map((d) => ({ href: `/admin/${d.key}`, title: d.title })),
+  { href: "/admin/fotografias", title: "Fotografias" },
 ];
 
 const linkCls = (active: boolean) =>

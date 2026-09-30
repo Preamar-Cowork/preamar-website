@@ -175,16 +175,18 @@ function ItemControls({
   );
 }
 
-function ImageField({
+export function ImageField({
   label,
   help,
   value,
   onChange,
+  big = false,
 }: {
   label: string;
   help?: string;
   value: string;
   onChange: (v: string) => void;
+  big?: boolean; // large preview (Fotografias page)
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -208,8 +210,10 @@ function ImageField({
 
   return (
     <Field label={label} help={help}>
-      <div className="flex gap-4 items-start">
-        <div className="w-40 h-24 shrink-0 border border-pm-line bg-pm-bgAlt overflow-hidden flex items-center justify-center">
+      <div className={big ? "flex flex-col gap-3" : "flex gap-4 items-start"}>
+        <div
+          className={`${big ? "w-full aspect-[4/3]" : "w-40 h-24"} shrink-0 border border-pm-line bg-pm-bgAlt overflow-hidden flex items-center justify-center`}
+        >
           {value ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={value} alt="" className="w-full h-full object-cover" />
@@ -217,7 +221,7 @@ function ImageField({
             <span className="font-label text-[10px] tracking-[0.1em] uppercase text-pm-concrete">sem imagem</span>
           )}
         </div>
-        <div className="flex flex-col gap-2 items-start">
+        <div className={big ? "flex flex-wrap gap-4 items-center" : "flex flex-col gap-2 items-start"}>
           <label className="bg-pm-ink text-pm-bg py-2 px-4 font-label font-bold text-[11px] tracking-[0.14em] uppercase cursor-pointer">
             {busy ? "A carregar…" : value ? "Trocar imagem" : "Carregar imagem"}
             <input
