@@ -54,7 +54,7 @@ export function JsonLd({ sections: c }: { sections: SiteSections }) {
     url: `${SITE_URL}/`,
     description: SITE_DESCRIPTION,
     image: `${SITE_URL}/opengraph-image.jpg`,
-    logo: `${SITE_URL}/icon.svg`,
+    logo: `${SITE_URL}/icon.png`,
     email: c.footer.email || undefined,
     telephone: phone,
     address: {

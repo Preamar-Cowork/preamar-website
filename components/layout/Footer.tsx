@@ -42,7 +42,8 @@ function usePlatform() {
 
 /* ---------- footer ---------- */
 
-const linkCls = "hover:text-[#F3F1EC] focus-visible:text-[#F3F1EC] transition-colors underline-offset-4 hover:underline";
+const linkCls =
+  "text-inherit hover:text-[#F3F1EC] focus-visible:text-[#F3F1EC] transition-colors underline-offset-4 hover:underline";
 
 export function Footer({ content: c }: { content: SiteSections["footer"] }) {
   const platform = usePlatform();
