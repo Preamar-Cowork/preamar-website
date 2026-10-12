@@ -20,6 +20,7 @@ type Reservation = {
   sinal_valor?: number | null;
   privacy_aceite: boolean;
   read_at?: string | null;
+  idioma?: string | null; // "en" = sent from the English page (migration 010)
 };
 
 type Filter = "todos" | "porler" | "sinal";
@@ -50,7 +51,7 @@ function countBy(rows: Reservation[], key: keyof Reservation) {
 function toCsv(rows: Reservation[]) {
   const cols: (keyof Reservation)[] = [
     "created_at", "nome", "email", "telefone", "profissao", "onde", "interesse", "gabinete",
-    "dias", "quando", "cacifo", "sinal_aceite", "sinal_valor", "read_at",
+    "dias", "quando", "cacifo", "sinal_aceite", "sinal_valor", "idioma", "read_at",
   ];
   const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   return "﻿" + [cols.join(";"), ...rows.map((r) => cols.map((c) => esc(r[c])).join(";"))].join("\n");
@@ -253,7 +254,15 @@ export default function PedidosPage() {
                   {interesse || "—"}
                   {r.quando ? <span className="text-pm-concrete"> · {r.quando}</span> : null}
                 </span>
-                <span className="justify-self-end">
+                <span className="justify-self-end flex gap-2">
+                  {r.idioma === "en" && (
+                    <span
+                      title="Enviado a partir da página em inglês — responder em inglês"
+                      className="font-label font-bold text-[11px] tracking-[0.08em] uppercase bg-pm-sky/25 px-2 py-0.5 text-pm-ink whitespace-nowrap"
+                    >
+                      EN
+                    </span>
+                  )}
                   {r.sinal_aceite && (
                     <span className="font-label font-bold text-[11px] tracking-[0.08em] uppercase border border-pm-ink px-2 py-0.5 text-pm-ink whitespace-nowrap">
                       sinal{r.sinal_valor ? ` ${r.sinal_valor} €` : ""}
@@ -305,6 +314,7 @@ export default function PedidosPage() {
                     <Item k="Dias por semana" v={r.dias} />
                     <Item k="Quando" v={r.quando} />
                     <Item k="Cacifo" v={r.cacifo} />
+                    <Item k="Idioma" v={r.idioma === "en" ? "Inglês (página EN)" : "Português"} />
                     <Item k="Sinal" v={r.sinal_aceite ? `Sim${r.sinal_valor ? ` — ${r.sinal_valor} €` : ""}` : "Não"} />
                     <Item
                       k="Recebido"

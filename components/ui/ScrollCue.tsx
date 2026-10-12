@@ -1,15 +1,17 @@
 "use client";
 
 import { useReducedMotion } from "framer-motion";
+import { useLocale } from "@/lib/i18n";
 
 /** Double chevron (») pointing down, gently bobbing. Scrolls one screen on click. */
 export function ScrollCue({ color, onClick }: { color: string; onClick?: () => void }) {
   const reduce = useReducedMotion();
+  const { t } = useLocale();
   return (
     <button
       type="button"
       onClick={onClick}
-      aria-label="Descer"
+      aria-label={t.scrollDown}
       className="block mx-auto p-2 bg-transparent cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
       style={{ color }}
     >

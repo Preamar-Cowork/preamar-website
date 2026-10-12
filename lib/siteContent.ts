@@ -2,11 +2,13 @@ import { unstable_noStore as noStore } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase";
 import { sanitizeHeroSettings, type HeroSettings } from "@/lib/heroSettings";
 import { sanitizeSections, type SiteSections } from "@/lib/content/schema";
+import { sanitizeEnSections } from "@/lib/content/en";
 
 export type SiteContent = {
   heroVideoUrl: string | null;
   heroSettings: HeroSettings;
   sections: SiteSections;
+  sectionsEn: Record<string, Record<string, unknown>>; // English texts only (see lib/content/en.ts)
 };
 
 /**
@@ -20,6 +22,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     heroVideoUrl: null,
     heroSettings: sanitizeHeroSettings(null),
     sections: sanitizeSections(null),
+    sectionsEn: {},
   };
   const supabase = getSupabaseServerClient();
   if (!supabase) return fallback;
@@ -30,6 +33,7 @@ export async function getSiteContent(): Promise<SiteContent> {
       heroVideoUrl: (data.hero_video_url as string | null) ?? null,
       heroSettings: sanitizeHeroSettings(data.hero_settings),
       sections: sanitizeSections(data.sections), // column added by migration 005
+      sectionsEn: sanitizeEnSections(data.sections_en), // column added by migration 010
     };
   } catch {
     return fallback;

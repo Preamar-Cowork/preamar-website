@@ -13,12 +13,16 @@ import {
   type SaveState,
 } from "@/components/admin/ui";
 import { Hero } from "@/components/sections/Hero";
+import { LangTabs, useEditLang } from "@/components/admin/LangTabs";
+import { LocaleProvider } from "@/lib/i18n";
 import type { HighTide } from "@/lib/tideFormat";
 import {
   FONT_LABELS,
   HERO_DEFAULTS,
   OVERLAY_HEX,
+  localizeHero,
   sanitizeHeroSettings,
+  type HeroText,
   type HeroFont,
   type HeroSettings,
   type OverlayColor,
@@ -32,6 +36,7 @@ export default function AdminHeroPage() {
   const [tides, setTides] = useState<HighTide[]>([]);
   const [save, setSave] = useState<SaveState>({ kind: "idle" });
 
+  const [lang, setLang] = useEditLang();
   const [file, setFile] = useState<File | null>(null);
   const [upload, setUpload] = useState<SaveState>({ kind: "idle" });
 
@@ -53,6 +58,14 @@ export default function AdminHeroPage() {
   }, []);
 
   const dirty = JSON.stringify(settings) !== JSON.stringify(saved);
+  const { en: enNow, ...ptNow } = settings;
+  const { en: enSaved, ...ptSaved } = saved;
+  const dirtyEn = JSON.stringify(enNow) !== JSON.stringify(enSaved);
+  const dirtyPt = JSON.stringify(ptNow) !== JSON.stringify(ptSaved);
+  const setEn = (k: keyof HeroText, v: string) => {
+    setSettings((s) => ({ ...s, en: { ...s.en, [k]: v } }));
+    setSave({ kind: "idle" });
+  };
   const set = <K extends keyof HeroSettings>(k: K, v: HeroSettings[K]) => {
     setSettings((s) => ({ ...s, [k]: v }));
     setSave({ kind: "idle" });
@@ -101,10 +114,12 @@ export default function AdminHeroPage() {
     <div className="pb-24">
       <div className={`${labelCls} mb-3`}>Conteúdo</div>
       <h1 className="font-display text-[32px] text-pm-ink mb-2">Hero</h1>
-      <p className="text-pm-graphite text-[15px] mb-10 max-w-[60ch]">
+      <p className="text-pm-graphite text-[15px] mb-8 max-w-[60ch]">
         Tudo o que mudares aqui aparece logo na pré-visualização. Só vai para o site quando
         carregares em <em>Guardar alterações</em>.
       </p>
+
+      <LangTabs value={lang} onChange={setLang} dirty={{ pt: dirtyPt, en: dirtyEn }} />
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_380px] gap-10 items-start">
         {/* live preview */}
@@ -114,7 +129,11 @@ export default function AdminHeroPage() {
             {dirty && <span className="text-pm-sky">alterações por guardar</span>}
           </div>
           <ScaledPreview height={810}>
-            {loaded && <Hero contained videoUrl={videoUrl} settings={settings} tides={tides} />}
+            {loaded && (
+              <LocaleProvider locale={lang}>
+                <Hero contained videoUrl={videoUrl} settings={localizeHero(settings, lang)} tides={tides} />
+              </LocaleProvider>
+            )}
           </ScaledPreview>
           <div className="flex flex-wrap items-center gap-4 mt-6">
             <button
@@ -133,7 +152,7 @@ export default function AdminHeroPage() {
             </button>
             <button
               onClick={() => {
-                setSettings(HERO_DEFAULTS);
+                setSettings((s) => (lang === "en" ? { ...s, en: HERO_DEFAULTS.en } : { ...HERO_DEFAULTS, en: s.en }));
                 setSave({ kind: "idle" });
               }}
               className="font-label font-bold text-[12px] tracking-[0.14em] uppercase text-pm-concrete"
@@ -200,6 +219,48 @@ export default function AdminHeroPage() {
             />
           </Panel>
 
+          {lang === "en" && (
+            <Panel title="Texto do hero — inglês">
+              {(
+                [
+                  ["descriptor", "Linha por baixo do ícone (canto superior esquerdo)", 80, false],
+                  ["tagline", "Frase-chave", 140, false],
+                  ["subtitle", "Subtítulo (opcional)", 280, true],
+                  ["ctaText", "Texto do botão", 60, false],
+                ] as [keyof HeroText, string, number, boolean][]
+              ).map(([k, label, max, multi]) => (
+                <Field key={k} label={label}>
+                  {multi ? (
+                    <textarea
+                      className={`${inputCls} resize-none`}
+                      rows={2}
+                      maxLength={max}
+                      placeholder={settings[k]}
+                      value={settings.en[k]}
+                      onChange={(e) => setEn(k, e.target.value)}
+                    />
+                  ) : (
+                    <input
+                      className={inputCls}
+                      maxLength={max}
+                      placeholder={settings[k]}
+                      value={settings.en[k]}
+                      onChange={(e) => setEn(k, e.target.value)}
+                    />
+                  )}
+                  <p className="text-[13px] text-pm-concrete mt-1.5">
+                    <span className="font-label font-bold text-[10px] tracking-[0.12em] mr-1.5">PT</span>
+                    {settings[k]}
+                  </p>
+                </Field>
+              ))}
+              <p className="text-pm-concrete text-[12px]">
+                Filtro, logo, tipo e tamanho de letra e vídeo são iguais nas duas línguas.
+              </p>
+            </Panel>
+          )}
+
+          {lang === "pt" && (
           <Panel title="Texto do hero">
             <Field label="Linha por baixo do ícone (canto superior esquerdo)">
               <input
@@ -263,6 +324,7 @@ export default function AdminHeroPage() {
               />
             </Field>
           </Panel>
+          )}
 
           <Panel title="Vídeo de fundo">
             {videoUrl ? (

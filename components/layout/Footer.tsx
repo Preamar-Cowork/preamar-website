@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Lockup } from "@/components/brand/Brand";
 import type { SiteSections } from "@/lib/content/schema";
+import { useLocale } from "@/lib/i18n";
 
 /* ---------- links ---------- */
 
@@ -47,6 +48,7 @@ const linkCls =
 
 export function Footer({ content: c }: { content: SiteSections["footer"] }) {
   const platform = usePlatform();
+  const { t } = useLocale();
 
   const parts: { key: string; label: string; href: string; external?: boolean; aria: string }[] = [];
   if (c.place) {
@@ -56,18 +58,18 @@ export function Footer({ content: c }: { content: SiteSections["footer"] }) {
       label: c.place,
       href: custom || mapsHref(c.place, platform),
       external: !!custom || platform !== "android", // geo: links hand over to the maps app, no new tab
-      aria: `Abrir ${c.place} no mapa`,
+      aria: t.openMap(c.place),
     });
   }
-  if (c.email) parts.push({ key: "email", label: c.email, href: `mailto:${c.email.trim()}`, aria: `Enviar email para ${c.email}` });
-  if (c.phone) parts.push({ key: "phone", label: c.phone, href: telHref(c.phone), aria: `Ligar para ${c.phone}` });
+  if (c.email) parts.push({ key: "email", label: c.email, href: `mailto:${c.email.trim()}`, aria: t.sendEmail(c.email) });
+  if (c.phone) parts.push({ key: "phone", label: c.phone, href: telHref(c.phone), aria: t.call(c.phone) });
   if (c.instagram)
     parts.push({
       key: "instagram",
       label: `Instagram ${instagramLabel(c.instagram)}`,
       href: instagramHref(c.instagram),
       external: true,
-      aria: `Instagram da PREAMAR (abre numa nova janela)`,
+      aria: t.instagram,
     });
 
   return (

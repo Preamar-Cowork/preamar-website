@@ -14,16 +14,22 @@ import { TideProgressLine } from "@/components/ui/TideProgressLine";
 import type { HeroSettings } from "@/lib/heroSettings";
 import type { HighTide } from "@/lib/tideFormat";
 import type { SiteSections } from "@/lib/content/schema";
+import { LocaleProvider } from "@/lib/i18n";
+import type { Locale } from "@/lib/locale";
 
 export function Landing({
+  locale = "pt",
   heroVideoUrl,
   heroSettings,
   sections: c,
+  formValues,
   tides,
 }: {
+  locale?: Locale;
   heroVideoUrl: string | null;
   heroSettings: HeroSettings;
   sections: SiteSections;
+  formValues?: SiteSections["form"]; // Portuguese form options — what gets saved, in any language
   tides: HighTide[];
 }) {
   const formRef = useRef<HTMLDivElement>(null);
@@ -31,6 +37,7 @@ export function Landing({
 
   // Keep in the same order as SECTION_DEFS (lib/content/schema.ts) — it drives the admin menu.
   return (
+    <LocaleProvider locale={locale}>
     <main className="bg-pm-bg text-pm-ink font-body relative overflow-x-hidden">
       <TideProgressLine />
       <Hero onReserve={scrollToForm} videoUrl={heroVideoUrl} settings={heroSettings} tides={tides} />
@@ -39,9 +46,10 @@ export function Landing({
       <Plans content={c.plans} />
       <Fiscal content={c.fiscal} />
       <About content={c.about} />
-      <ReservationForm ref={formRef} content={c.form} />
+      <ReservationForm ref={formRef} content={c.form} values={formValues} />
       <FAQ content={c.faq} />
       <Footer content={c.footer} />
     </main>
+    </LocaleProvider>
   );
 }

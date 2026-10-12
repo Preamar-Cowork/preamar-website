@@ -203,7 +203,7 @@ export type SectionKey = keyof SiteSections;
 /* ---------- admin field descriptions ---------- */
 
 export type Field =
-  | { key: string; label: string; type: "text"; help?: string; max?: number }
+  | { key: string; label: string; type: "text"; help?: string; max?: number; shared?: boolean } // shared = same in every language
   | { key: string; label: string; type: "textarea"; help?: string; rows?: number; max?: number }
   | { key: string; label: string; type: "lines"; help?: string } // \n = line break on the site
   | { key: string; label: string; type: "image"; help?: string }
@@ -419,15 +419,19 @@ export const SECTION_DEFS: SectionDef[] = [
     key: "footer",
     title: "Rodapé",
     fields: [
-      { key: "place", label: "Local / morada", type: "text", help: "Ao clicar, abre no mapa (Apple Maps no iPhone/Mac, a app de mapas no Android, Google Maps no resto)." },
-      { key: "mapsUrl", label: "Link do mapa (opcional)", type: "text", help: "Se preencheres (ex.: o link do Perfil de Empresa no Google Maps), o local abre sempre este link." },
-      { key: "email", label: "Email", type: "text", help: "Ao clicar, abre o email." },
-      { key: "phone", label: "Telefone", type: "text", help: "Ao clicar, liga (no telemóvel)." },
-      { key: "instagram", label: "Instagram", type: "text", help: "@utilizador ou link — ao clicar, abre o Instagram." },
+      { key: "place", label: "Local / morada", type: "text", shared: true, help: "Ao clicar, abre no mapa (Apple Maps no iPhone/Mac, a app de mapas no Android, Google Maps no resto)." },
+      { key: "mapsUrl", label: "Link do mapa (opcional)", type: "text", shared: true, help: "Se preencheres (ex.: o link do Perfil de Empresa no Google Maps), o local abre sempre este link." },
+      { key: "email", label: "Email", type: "text", shared: true, help: "Ao clicar, abre o email." },
+      { key: "phone", label: "Telefone", type: "text", shared: true, help: "Ao clicar, liga (no telemóvel)." },
+      { key: "instagram", label: "Instagram", type: "text", shared: true, help: "@utilizador ou link — ao clicar, abre o Instagram." },
       { key: "note", label: "Nota final", type: "text" },
     ],
   },
 ];
+
+/** Fields that have an English version (texts); numbers, images, switches and contacts are shared. */
+export const isTranslatable = (f: Field) =>
+  (f.type === "text" && !f.shared) || f.type === "textarea" || f.type === "lines" || f.type === "strings";
 
 export const SECTION_KEYS = SECTION_DEFS.map((d) => d.key);
 export const getSectionDef = (key: string) => SECTION_DEFS.find((d) => d.key === key);

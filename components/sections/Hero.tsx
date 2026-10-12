@@ -7,6 +7,8 @@ import { RevealLines } from "@/components/ui/RevealLines";
 import { formatLisbonTime, type HighTide } from "@/lib/tideFormat";
 import { BrandIcon, Wordmark } from "@/components/brand/Brand";
 import { ScrollCue } from "@/components/ui/ScrollCue";
+import { LangSwitch } from "@/components/ui/LangSwitch";
+import { useLocale } from "@/lib/i18n";
 import {
   FONT_CLASS,
   HERO_DEFAULTS,
@@ -15,6 +17,7 @@ import {
 } from "@/lib/heroSettings";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+const fmtHeight = (m: number, locale: string) => (locale === "pt" ? m.toFixed(1).replace(".", ",") : m.toFixed(1));
 const INK = "#3F4346";
 const OFF = "#F3F1EC";
 
@@ -37,6 +40,7 @@ export function Hero({
 }) {
   // no entrance animations in the admin preview (it re-renders on every keystroke)
   const reduce = useReducedMotion() || contained;
+  const { locale, t } = useLocale();
   // re-check every minute so the clock rolls over to the next high water
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
@@ -102,7 +106,10 @@ export function Hero({
       {/* top row: small lockup + real tide clock */}
       <div className="relative z-10 flex justify-between items-start p-6 md:p-10">
         <div>
-          <BrandIcon size={contained ? 36 : 34} color={fg} />
+          <div className="flex items-center gap-5">
+            <BrandIcon size={contained ? 36 : 34} color={fg} />
+            <LangSwitch disabled={contained} />
+          </div>
           <div className="font-label font-semibold text-[9px] md:text-[10px] tracking-[0.18em] uppercase opacity-75 mt-1.5">
             {s.descriptor}
           </div>
@@ -110,14 +117,14 @@ export function Hero({
         {nextTide && (
           <div
             className="font-label font-semibold text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-right leading-relaxed"
-            title="Preia-mar no Montijo — previsão FCUL/Lisboa com correção do Instituto Hidrográfico"
+            title={t.nextTideTitle}
           >
-            <span className="opacity-70">Próxima preamar</span>
+            <span className="opacity-70">{t.nextTide}</span>
             <br />
             <span className="inline-flex items-center gap-2">
               <span className="inline-block w-4 h-[2px] bg-pm-sky" />
               {formatLisbonTime(nextTide.iso)}
-              <span className="opacity-60">· {nextTide.heightM.toFixed(1).replace(".", ",")} m</span>
+              <span className="opacity-60">· {fmtHeight(nextTide.heightM, locale)} m</span>
             </span>
           </div>
         )}

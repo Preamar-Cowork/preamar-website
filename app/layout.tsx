@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_METADATA, SITE_VIEWPORT } from "@/lib/seo";
 import { Libre_Caslon_Display, Libre_Caslon_Text, Archivo_Narrow } from "next/font/google";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const caslonDisplay = Libre_Caslon_Display({
@@ -28,8 +29,10 @@ export const metadata: Metadata = SITE_METADATA;
 export const viewport = SITE_VIEWPORT;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // set by middleware.ts for /en
+  const lang = headers().get("x-pm-locale") === "en" ? "en" : "pt-PT";
   return (
-    <html lang="pt-PT">
+    <html lang={lang}>
       <body
         className={`${caslonDisplay.variable} ${caslonText.variable} ${archivoNarrow.variable} font-body`}
       >

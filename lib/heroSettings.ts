@@ -16,7 +16,12 @@ export type HeroSettings = {
   ctaText: string;
   overlayColor: OverlayColor;
   overlayOpacity: number; // 0–90 (%)
+  en: HeroText; // English texts (empty = shows the Portuguese)
 };
+
+/** The hero texts that have an English version. */
+export type HeroText = { descriptor: string; tagline: string; subtitle: string; ctaText: string };
+export const HERO_TEXT_KEYS = ["descriptor", "tagline", "subtitle", "ctaText"] as const;
 
 export const HERO_DEFAULTS: HeroSettings = {
   descriptor: "Espaços de trabalho · Montijo",
@@ -29,6 +34,12 @@ export const HERO_DEFAULTS: HeroSettings = {
   ctaText: "Reservar o meu lugar",
   overlayColor: "offwhite",
   overlayOpacity: 15,
+  en: {
+    descriptor: "Workspaces · Montijo",
+    tagline: "Your office by the river",
+    subtitle: "Coworking in Montijo — desks, private offices and a business address.",
+    ctaText: "Book my spot",
+  },
 };
 
 export const OVERLAY_HEX: Record<OverlayColor, string> = {
@@ -73,5 +84,25 @@ export function sanitizeHeroSettings(raw: unknown): HeroSettings {
     ctaText: str(r.ctaText, 60, d.ctaText) || d.ctaText,
     overlayColor: oneOf(r.overlayColor, ["offwhite", "ardosia", "azul"] as const, d.overlayColor),
     overlayOpacity: clamp(r.overlayOpacity, 0, 90, d.overlayOpacity),
+    en: sanitizeHeroText(r.en),
   };
+}
+
+function sanitizeHeroText(raw: unknown): HeroText {
+  const r = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const d = HERO_DEFAULTS.en;
+  return {
+    descriptor: str(r.descriptor, 80, d.descriptor),
+    tagline: str(r.tagline, 140, d.tagline),
+    subtitle: str(r.subtitle, 280, d.subtitle),
+    ctaText: str(r.ctaText, 60, d.ctaText),
+  };
+}
+
+/** Settings with the texts of the given language (empty English text → Portuguese). */
+export function localizeHero(s: HeroSettings, locale: "pt" | "en"): HeroSettings {
+  if (locale === "pt") return s;
+  const out = { ...s };
+  for (const k of HERO_TEXT_KEYS) out[k] = s.en[k].trim() || s[k];
+  return out;
 }

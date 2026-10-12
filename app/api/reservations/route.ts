@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
     sinal_aceite: !!body.sinalCheck,
     sinal_valor: Number.isFinite(Number(body.sinalValor)) && body.sinalValor !== null ? Number(body.sinalValor) : null,
     privacy_aceite: !!body.privacyCheck,
+    idioma: body.idioma === "en" ? "en" : "pt",
   };
 
   const supabase = getSupabaseServerClient();
@@ -32,12 +33,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true, persisted: false });
   }
 
-  let { error } = await supabase.from("reservations").insert(record);
-  // migration 006 (sinal_valor) not run yet → still save the reservation without it
-  if (error && /sinal_valor/.test(error.message)) {
-    const { sinal_valor: _omit, ...rest } = record;
-    void _omit;
-    ({ error } = await supabase.from("reservations").insert(rest));
+  // a migration not run yet (006 sinal_valor, 010 idioma) → still save the reservation without that column
+  let row: Record<string, unknown> = record;
+  let { error } = await supabase.from("reservations").insert(row);
+  for (const col of ["idioma", "sinal_valor"]) {
+    if (error && error.message.includes(col)) {
+      const { [col]: _omit, ...rest } = row;
+      void _omit;
+      row = rest;
+      ({ error } = await supabase.from("reservations").insert(row));
+    }
   }
   if (error) {
     console.error("[preamar] Supabase insert failed:", error.message);

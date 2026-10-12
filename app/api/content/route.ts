@@ -13,5 +13,6 @@ export async function GET() {
     hero_video_url: c.heroVideoUrl,
     hero_settings: c.heroSettings,
     sections: c.sections,
+    sections_en: c.sectionsEn,
   });
 }

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import type { Field as FieldDef } from "@/lib/content/schema";
 import { Field, inputCls, labelCls, readJson } from "@/components/admin/ui";
+import { hasText } from "@/lib/content/en";
+import { isTranslatable } from "@/lib/content/schema";
 
 type Val = unknown;
 type Obj = Record<string, unknown>;
@@ -11,7 +13,18 @@ const smallBtn =
   "font-label font-bold text-[11px] tracking-[0.12em] uppercase text-pm-concrete hover:text-pm-ink disabled:opacity-30";
 
 /** One field of a section, rendered according to its schema type. */
-export function FieldEditor({ def, value, onChange }: { def: FieldDef; value: Val; onChange: (v: Val) => void }) {
+export function FieldEditor({
+  def,
+  value,
+  onChange,
+  pt,
+}: {
+  def: FieldDef;
+  value: Val;
+  onChange: (v: Val) => void;
+  pt?: Val; // given = editing the English version; this is the Portuguese value for reference
+}) {
+  if (pt !== undefined) return <TranslateField def={def} value={value} onChange={onChange} pt={pt} />;
   switch (def.type) {
     case "text":
       return (
@@ -246,4 +259,112 @@ export function ImageField({
       </div>
     </Field>
   );
+}
+
+/* ---------- English version: texts only, Portuguese shown for reference ---------- */
+
+const refCls = "text-[13px] text-pm-concrete mt-1.5 leading-snug whitespace-pre-line";
+
+function PtRef({ text }: { text: string }) {
+  if (!text) return null;
+  return (
+    <p className={refCls}>
+      <span className="font-label font-bold text-[10px] tracking-[0.12em] mr-1.5">PT</span>
+      {text}
+    </p>
+  );
+}
+
+function TranslateField({ def, value, onChange, pt }: { def: FieldDef; value: Val; onChange: (v: Val) => void; pt: Val }) {
+  if (!hasText(def)) return null;
+  const ptStr = typeof pt === "string" ? pt : "";
+
+  if (def.type === "text" || def.type === "textarea" || def.type === "lines") {
+    const v = String(value ?? "");
+    const multi = def.type !== "text";
+    return (
+      <Field label={def.label} help={def.type === "lines" ? def.help : undefined}>
+        {multi ? (
+          <textarea
+            className={`${inputCls} resize-y`}
+            rows={def.type === "textarea" ? def.rows ?? 3 : Math.max(2, (v || ptStr).split("\n").length)}
+            value={v}
+            placeholder={ptStr}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        ) : (
+          <input className={inputCls} value={v} placeholder={ptStr} onChange={(e) => onChange(e.target.value)} />
+        )}
+        <PtRef text={ptStr} />
+        {!v.trim() && ptStr && <Missing />}
+      </Field>
+    );
+  }
+
+  if (def.type === "strings") {
+    const ptList = Array.isArray(pt) ? (pt as string[]) : [];
+    const list = Array.isArray(value) ? (value as string[]) : [];
+    return (
+      <Field label={def.label}>
+        <div className="flex flex-col gap-1">
+          {ptList.map((p, i) => (
+            <div key={i} className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] gap-x-4 items-baseline">
+              <input
+                className={inputCls}
+                value={list[i] ?? ""}
+                placeholder={p}
+                onChange={(e) => onChange(ptList.map((_, j) => (j === i ? e.target.value : list[j] ?? "")))}
+              />
+              <span className="text-[13px] text-pm-concrete truncate" title={p}>
+                <span className="font-label font-bold text-[10px] tracking-[0.12em] mr-1.5">PT</span>
+                {p}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Field>
+    );
+  }
+
+  if (def.type === "items") {
+    const ptList = Array.isArray(pt) ? (pt as Obj[]) : [];
+    const list = Array.isArray(value) ? (value as Obj[]) : [];
+    const textSubs = def.fields.filter(hasText);
+    const firstText = def.fields.find((f) => isTranslatable(f) && f.type !== "strings");
+    return (
+      <div>
+        <div className={`${labelCls} mb-3`}>{def.label}</div>
+        <div className="flex flex-col gap-4">
+          {ptList.map((ptItem, i) => {
+            const item = list[i] ?? {};
+            const title = firstText ? String(ptItem[firstText.key] ?? "") : "";
+            return (
+              <div key={i} className="border border-pm-line p-4 flex flex-col gap-5 bg-pm-bgAlt/40">
+                <span className={`${labelCls} text-pm-ink`}>
+                  {def.itemLabel} {i + 1}
+                  {title && <span className="text-pm-concrete normal-case tracking-normal font-body font-normal text-[13px] ml-2">— {title.split("\n")[0]}</span>}
+                </span>
+                {textSubs.map((sub) => (
+                  <TranslateField
+                    key={sub.key}
+                    def={sub}
+                    value={item[sub.key]}
+                    pt={ptItem[sub.key]}
+                    onChange={(v) =>
+                      onChange(ptList.map((_, j) => (j === i ? { ...(list[j] ?? {}), [sub.key]: v } : list[j] ?? {})))
+                    }
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+function Missing() {
+  return <p className="text-[12px] text-pm-sky mt-1 font-label tracking-[0.06em]">Por traduzir — o site mostra o português.</p>;
 }

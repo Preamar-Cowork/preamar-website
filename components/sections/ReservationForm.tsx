@@ -5,6 +5,8 @@ import { forwardRef, useState } from "react";
 import { Chips } from "@/components/ui/Chips";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import type { SiteSections } from "@/lib/content/schema";
+import { useLocale } from "@/lib/i18n";
+import { money } from "@/lib/locale";
 
 type FormState = {
   nome: string;
@@ -40,15 +42,30 @@ const labelClass = "font-label font-bold text-[11px] tracking-[0.15em] uppercase
 const checkboxBase =
   "w-[18px] h-[18px] border border-pm-ink flex-shrink-0 flex items-center justify-center text-[11px] text-pm-ink mt-0.5";
 
-type Props = { content: SiteSections["form"] };
+type Props = {
+  content: SiteSections["form"]; // texts in the page's language
+  values?: SiteSections["form"]; // Portuguese options: what gets saved (and checked for “gabinete”)
+};
 
-export const ReservationForm = forwardRef<HTMLDivElement, Props>(function ReservationForm({ content: c }, ref) {
+const OPTION_KEYS = ["onde", "interesse", "gabinete", "dias", "quando", "cacifo"] as const;
+
+/** The Portuguese option at the same position as the chosen one. */
+function toSaved(shown: string[], saved: string[], value: string | null): string | null {
+  if (value === null) return null;
+  const i = shown.indexOf(value);
+  return i >= 0 && saved[i] ? saved[i] : value;
+}
+
+export const ReservationForm = forwardRef<HTMLDivElement, Props>(function ReservationForm({ content: c, values }, ref) {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [errorMsg, setErrorMsg] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const isOffice = !!form.interesse && /gabinete/i.test(form.interesse);
+  const { locale, t } = useLocale();
+  const v = values ?? c;
+  const interesseSaved = toSaved(c.interesse, v.interesse, form.interesse);
+  const isOffice = !!interesseSaved && /gabinete/i.test(interesseSaved);
   const sinalValor = isOffice ? c.sinalAmountOffice : c.sinalAmount;
 
   const setField = <K extends keyof FormState>(key: K, val: FormState[K]) =>
@@ -56,11 +73,11 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
 
   async function handleSubmit() {
     if (!form.nome || !form.email || !form.telefone) {
-      setErrorMsg("Preenche nome, email e telemóvel.");
+      setErrorMsg(t.errMissing);
       return;
     }
     if (!form.privacyCheck) {
-      setErrorMsg("Aceita a política de privacidade para continuar.");
+      setErrorMsg(t.errPrivacy);
       return;
     }
     setErrorMsg("");
@@ -69,12 +86,17 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
       const res = await fetch("/api/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, sinalValor: form.sinalCheck ? sinalValor : null }),
+        body: JSON.stringify({
+          ...form,
+          ...Object.fromEntries(OPTION_KEYS.map((k) => [k, toSaved(c[k], v[k], form[k])])),
+          sinalValor: form.sinalCheck ? sinalValor : null,
+          idioma: locale,
+        }),
       });
       if (!res.ok) throw new Error("request_failed");
       setSubmitted(true);
     } catch {
-      setErrorMsg("Não foi possível enviar agora. Tenta de novo em instantes.");
+      setErrorMsg(t.errSend);
     } finally {
       setSubmitting(false);
     }
@@ -140,7 +162,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
                 />
               </div>
 
-              {form.interesse && /gabinete/i.test(form.interesse) && (
+              {isOffice && (
                 <div>
                   <div className={labelClass}>{c.gabineteLabel}</div>
                   <Chips
@@ -179,13 +201,14 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
               >
                 <div className="text-center">
                   <div className="font-display text-[44px] md:text-[52px] leading-none text-pm-ink whitespace-nowrap">
+                    {locale === "en" && <span className="text-[0.6em]">€</span>}
                     <span key={sinalValor} className="inline-block animate-[pm-pop_.35s_ease-out]">
                       {sinalValor}
                     </span>
-                    <span className="text-[0.6em]">&nbsp;€</span>
+                    {locale !== "en" && <span className="text-[0.6em]">&nbsp;€</span>}
                   </div>
                   <div className="font-label font-semibold text-[10px] tracking-[0.14em] uppercase text-pm-concrete mt-2">
-                    sinal
+                    {t.deposit}
                   </div>
                 </div>
                 <div>
@@ -202,7 +225,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
                       ✓
                     </span>
                     <span className="font-body font-bold text-[17px] md:text-[18px] leading-snug text-pm-ink">
-                      {(isOffice ? c.sinalTitleOffice : c.sinalTitle).replace("{valor}", `${sinalValor} €`)}
+                      {(isOffice ? c.sinalTitleOffice : c.sinalTitle).replace("{valor}", money(sinalValor, locale))}
                     </span>
                   </div>
                   {c.sinalDesc && (
@@ -231,7 +254,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
                 disabled={submitting}
                 className="bg-pm-ink text-pm-bg border-0 py-[18px] font-label font-bold text-sm tracking-[0.14em] uppercase cursor-pointer disabled:opacity-60 max-w-sm"
               >
-                {submitting ? "A enviar…" : c.submitText}
+                {submitting ? t.sending : c.submitText}
               </button>
             </div>
           </div>

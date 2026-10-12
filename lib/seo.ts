@@ -11,15 +11,25 @@ export const SITE_DESCRIPTION =
 export const SITE_DESCRIPTION_TEMPLATE =
   "Cowork no Montijo, junto ao Tejo: secretárias desde {flexivel-dia}/dia, gabinetes privados e morada fiscal. A dez minutos de Alcochete, sem ponte. Reserva o teu lugar.";
 
+export const SITE_TITLE_EN = "Coworking in Montijo — Desks, Private Offices & Business Address | PREAMAR";
+export const SITE_DESCRIPTION_EN =
+  "Coworking in Montijo, by the Tagus: desks from €12/day, private offices and a business address. Ten minutes from Alcochete, no bridge to cross. Book your spot.";
+export const SITE_DESCRIPTION_TEMPLATE_EN =
+  "Coworking in Montijo, by the Tagus: desks from {flexivel-dia}/day, private offices and a business address. Ten minutes from Alcochete, no bridge to cross. Book your spot.";
+
+/** hreflang: Portuguese at "/", English at "/en"; Portuguese is the default. */
+export const LANGUAGE_ALTERNATES = { "pt-PT": "/", en: "/en", "x-default": "/" };
+
 export const SITE_METADATA: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_TITLE, template: "%s | PREAMAR" }, // home uses the full title as-is
   description: SITE_DESCRIPTION,
   applicationName: "PREAMAR",
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/", languages: LANGUAGE_ALTERNATES },
   openGraph: {
     type: "website",
     locale: "pt_PT",
+    alternateLocale: ["en_GB"],
     url: "/",
     siteName: "PREAMAR",
     title: SITE_TITLE,

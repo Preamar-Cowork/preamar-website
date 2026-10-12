@@ -3,9 +3,10 @@
 import { motion, animate, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import type { SiteSections } from "@/lib/content/schema";
+import { useLocale } from "@/lib/i18n";
+import { fmtNumber } from "@/lib/locale";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const fmt = (n: number) => (Number.isInteger(n) ? String(n) : n.toFixed(2).replace(".", ","));
 
 /** Counts up the first time it scrolls into view, then glides between values. */
 function Price({ target }: { target: number }) {
@@ -46,6 +47,8 @@ function PlanCard({
   unit: string;
   features: SiteSections["plans"]["features"];
 }) {
+  const { locale, t } = useLocale();
+  const en = locale === "en";
   const hasOptions = p.options.length > 0;
   const [sel, setSel] = useState(Math.min(Math.max(0, p.defaultOption - 1), Math.max(0, p.options.length - 1)));
   const opt = hasOptions ? p.options[Math.min(sel, p.options.length - 1)] : null;
@@ -102,8 +105,9 @@ function PlanCard({
       <div className="mb-8">
         <div className="font-display text-[52px] md:text-[56px] leading-none text-pm-ink mb-3 whitespace-nowrap">
           {!hasOptions && p.prefix}
+          {en && "€"}
           <Price target={price} />
-          &nbsp;€
+          {!en && <>&nbsp;€</>}
         </div>
         <div className="font-label text-[11px] tracking-[0.08em] uppercase text-pm-concrete">
           {opt ? opt.unit : unit}
@@ -114,7 +118,12 @@ function PlanCard({
             {opt?.detail && perPerson ? " · " : ""}
             {perPerson !== null && (
               <>
-                <span className="text-pm-ink">{fmt(Math.round(perPerson * 100) / 100)} €</span> por pessoa
+                <span className="text-pm-ink">
+                  {en ? "€" : ""}
+                  {fmtNumber(Math.round(perPerson * 100) / 100, locale)}
+                  {en ? "" : " €"}
+                </span>{" "}
+                {t.perPerson}
               </>
             )}
           </div>
@@ -138,7 +147,7 @@ function PlanCard({
                 {on ? "✓" : "—"}
               </span>
               <span>
-                <span className="sr-only">{on ? "Incluído: " : "Não incluído: "}</span>
+                <span className="sr-only">{on ? t.included : t.notIncluded}</span>
                 {f.label}
               </span>
             </li>

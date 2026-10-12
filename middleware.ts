@@ -4,6 +4,13 @@ import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // English pages: tell the root layout to write <html lang="en">
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
+    const headers = new Headers(request.headers);
+    headers.set("x-pm-locale", "en");
+    return NextResponse.next({ request: { headers } });
+  }
   if (!pathname.startsWith("/admin")) return NextResponse.next();
 
   // Supabase not configured yet (NEXT_PUBLIC_SUPABASE_ANON_KEY missing) —
@@ -33,5 +40,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/en", "/en/:path*"],
 };
