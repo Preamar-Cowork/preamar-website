@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Lockup } from "@/components/brand/Brand";
 import type { SiteSections } from "@/lib/content/schema";
 import { useLocale } from "@/lib/i18n";
+import { PRIVACY_PATH } from "@/lib/locale";
 import { OPEN_COOKIES_EVENT } from "@/components/Analytics";
 
 /* ---------- links ---------- */
@@ -49,7 +50,7 @@ const linkCls =
 
 export function Footer({ content: c }: { content: SiteSections["footer"] }) {
   const platform = usePlatform();
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
 
   const parts: { key: string; label: string; href: string; external?: boolean; aria: string }[] = [];
   if (c.place) {
@@ -103,6 +104,10 @@ export function Footer({ content: c }: { content: SiteSections["footer"] }) {
         >
           {t.cookieLink}
         </button>
+        <span aria-hidden="true" className="mx-3">·</span>
+        <a href={PRIVACY_PATH[locale]} style={{ color: "inherit" }} className="hover:text-[#C9CDCF] transition-colors">
+          {t.privacyLink}
+        </a>
       </div>
     </footer>
   );

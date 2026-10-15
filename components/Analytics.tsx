@@ -3,13 +3,14 @@
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/lib/i18n";
+import { PRIVACY_PATH } from "@/lib/locale";
 import { ADS_ID, GTAG_INIT, readConsent, setConsent } from "@/lib/analytics";
 
 export const OPEN_COOKIES_EVENT = "pm-open-cookies";
 
 /** Google tag (public pages only) + the cookie banner. */
 export function Analytics() {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -38,7 +39,16 @@ export function Analytics() {
           aria-label={t.cookieLink}
           className="fixed z-50 bottom-4 left-4 right-4 md:left-auto md:right-6 md:bottom-6 md:max-w-[420px] bg-pm-ink text-pm-bg p-5 md:p-6 shadow-[0_10px_40px_rgba(0,0,0,0.25)]"
         >
-          <p className="text-[14px] leading-relaxed m-0 mb-5 text-[#DADDDE]">{t.cookieText}</p>
+          <p className="text-[14px] leading-relaxed m-0 mb-5 text-[#DADDDE]">
+            {t.cookieText}{" "}
+            <a
+              href={`${PRIVACY_PATH[locale]}#cookies`}
+              style={{ color: "inherit" }}
+              className="underline underline-offset-4 decoration-white/40 hover:decoration-white"
+            >
+              {t.cookieMore}
+            </a>
+          </p>
           <div className="flex gap-3">
             <button
               type="button"

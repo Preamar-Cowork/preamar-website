@@ -6,7 +6,7 @@ import { Chips } from "@/components/ui/Chips";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import type { SiteSections } from "@/lib/content/schema";
 import { useLocale } from "@/lib/i18n";
-import { money } from "@/lib/locale";
+import { money, PRIVACY_PATH } from "@/lib/locale";
 import { trackLead } from "@/lib/analytics";
 
 type FormState = {
@@ -242,7 +242,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
               >
                 <div className={checkboxBase}>{form.privacyCheck ? "✓" : ""}</div>
                 <span className="text-pm-ink text-[15px] leading-snug">
-                  {c.privacyText}
+                  <PrivacyText text={c.privacyText} href={PRIVACY_PATH[locale]} phrase={t.privacyPhrase} />
                 </span>
               </div>
 
@@ -275,3 +275,34 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
     </section>
   );
 });
+
+/** "Aceito a política de privacidade" with the policy words as a link (opens in a new tab). */
+function PrivacyText({ text, href, phrase }: { text: string; href: string; phrase: RegExp }) {
+  const m = text.match(phrase);
+  const link = (label: string) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener"
+      onClick={(e) => e.stopPropagation()}
+      style={{ color: "inherit" }}
+      className="underline underline-offset-4 decoration-pm-concrete hover:decoration-pm-ink"
+    >
+      {label}
+    </a>
+  );
+  if (!m || m.index === undefined) {
+    return (
+      <>
+        {text} ({link("↗")})
+      </>
+    );
+  }
+  return (
+    <>
+      {text.slice(0, m.index)}
+      {link(m[0])}
+      {text.slice(m.index + m[0].length)}
+    </>
+  );
+}

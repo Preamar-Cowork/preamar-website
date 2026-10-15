@@ -9,6 +9,7 @@ export type Locale = "pt" | "en";
 export const LOCALES: Locale[] = ["pt", "en"];
 export const LOCALE_PATH: Record<Locale, string> = { pt: "/", en: "/en" };
 export const HTML_LANG: Record<Locale, string> = { pt: "pt-PT", en: "en" };
+export const PRIVACY_PATH: Record<Locale, string> = { pt: "/privacidade", en: "/en/privacy" };
 
 export const UI = {
   pt: {
@@ -33,6 +34,9 @@ export const UI = {
     cookieAccept: "Aceitar",
     cookieDecline: "Recusar",
     cookieLink: "Cookies",
+    cookieMore: "Saber mais",
+    privacyLink: "Privacidade",
+    privacyPhrase: /pol[ií]tica de privacidade/i,
   },
   en: {
     nextTide: "Next high tide",
@@ -56,6 +60,9 @@ export const UI = {
     cookieAccept: "Accept",
     cookieDecline: "Decline",
     cookieLink: "Cookies",
+    cookieMore: "Learn more",
+    privacyLink: "Privacy",
+    privacyPhrase: /privacy policy/i,
   },
 } as const;
 

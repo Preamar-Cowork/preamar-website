@@ -9,7 +9,15 @@ const ITEMS: { locale: Locale; label: string; name: string; lang: string }[] = [
 ];
 
 /** "PT | EN" — the current language in bold. Colour follows the parent. */
-export function LangSwitch({ className = "", disabled = false }: { className?: string; disabled?: boolean }) {
+export function LangSwitch({
+  className = "",
+  disabled = false,
+  hrefs = LOCALE_PATH,
+}: {
+  className?: string;
+  disabled?: boolean;
+  hrefs?: Record<Locale, string>; // e.g. the privacy page in each language
+}) {
   const { locale, t } = useLocale();
   return (
     <nav aria-label={t.langNav} className={`font-label text-[11px] md:text-[12px] tracking-[0.18em] uppercase flex items-center gap-2 ${className}`}>
@@ -23,7 +31,7 @@ export function LangSwitch({ className = "", disabled = false }: { className?: s
               </span>
             )}
             <a
-              href={LOCALE_PATH[it.locale]}
+              href={hrefs[it.locale]}
               hrefLang={it.lang}
               lang={it.lang}
               aria-label={it.name}
