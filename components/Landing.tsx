@@ -15,6 +15,7 @@ import type { HeroSettings } from "@/lib/heroSettings";
 import type { HighTide } from "@/lib/tideFormat";
 import type { SiteSections } from "@/lib/content/schema";
 import { LocaleProvider } from "@/lib/i18n";
+import { Analytics } from "@/components/Analytics";
 import type { Locale } from "@/lib/locale";
 
 export function Landing({
@@ -49,6 +50,7 @@ export function Landing({
       <ReservationForm ref={formRef} content={c.form} values={formValues} />
       <FAQ content={c.faq} />
       <Footer content={c.footer} />
+      <Analytics />
     </main>
     </LocaleProvider>
   );

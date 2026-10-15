@@ -29,6 +29,10 @@ export const UI = {
     call: (n: string) => `Ligar para ${n}`,
     instagram: "Instagram da PREAMAR (abre numa nova janela)",
     people: "pessoas",
+    cookieText: "Usamos cookies do Google para saber que anúncios trazem pedidos de reserva. Só os ativamos se aceitares.",
+    cookieAccept: "Aceitar",
+    cookieDecline: "Recusar",
+    cookieLink: "Cookies",
   },
   en: {
     nextTide: "Next high tide",
@@ -48,6 +52,10 @@ export const UI = {
     call: (n: string) => `Call ${n}`,
     instagram: "PREAMAR on Instagram (opens in a new window)",
     people: "people",
+    cookieText: "We use Google cookies to see which ads bring in booking requests. They're only switched on if you accept.",
+    cookieAccept: "Accept",
+    cookieDecline: "Decline",
+    cookieLink: "Cookies",
   },
 } as const;
 

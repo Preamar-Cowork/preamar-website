@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Lockup } from "@/components/brand/Brand";
 import type { SiteSections } from "@/lib/content/schema";
 import { useLocale } from "@/lib/i18n";
+import { OPEN_COOKIES_EVENT } from "@/components/Analytics";
 
 /* ---------- links ---------- */
 
@@ -94,6 +95,14 @@ export function Footer({ content: c }: { content: SiteSections["footer"] }) {
       </div>
       <div className="max-w-[1320px] mx-auto mt-14 pt-6 border-t border-white/15 font-label text-[10px] tracking-[0.12em] uppercase text-[#6E7275] text-center">
         {c.note}
+        <span aria-hidden="true" className="mx-3">·</span>
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new Event(OPEN_COOKIES_EVENT))}
+          className="uppercase tracking-[0.12em] hover:text-[#C9CDCF] transition-colors"
+        >
+          {t.cookieLink}
+        </button>
       </div>
     </footer>
   );

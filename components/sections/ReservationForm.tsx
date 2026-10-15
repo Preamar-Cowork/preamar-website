@@ -7,6 +7,7 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import type { SiteSections } from "@/lib/content/schema";
 import { useLocale } from "@/lib/i18n";
 import { money } from "@/lib/locale";
+import { trackLead } from "@/lib/analytics";
 
 type FormState = {
   nome: string;
@@ -94,6 +95,7 @@ export const ReservationForm = forwardRef<HTMLDivElement, Props>(function Reserv
         }),
       });
       if (!res.ok) throw new Error("request_failed");
+      trackLead(); // Google Ads conversion
       setSubmitted(true);
     } catch {
       setErrorMsg(t.errSend);
