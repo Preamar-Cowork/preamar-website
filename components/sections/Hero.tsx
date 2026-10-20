@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PhotoPlaceholder } from "@/components/ui/PhotoPlaceholder";
 import { RevealLines } from "@/components/ui/RevealLines";
@@ -51,15 +51,35 @@ export function Hero({
   // no entrance animations in the admin preview (it re-renders on every keystroke)
   const reduce = useReducedMotion() || contained;
 
-  // pick the lighter video on small screens or "save data"; nothing downloads before the page is interactive
+  // The browser picks the lighter file on phones (<source media>), straight from the
+  // server HTML — so autoplay works exactly like a plain <video autoplay muted>.
   const variants = videoUrl ? videoVariants(videoUrl) : null;
-  const [videoSrc, setVideoSrc] = useState<string | undefined>(contained ? variants?.desktop : undefined);
+  const videoRef = useRef<HTMLVideoElement>(null);
   useEffect(() => {
-    if (!variants) return setVideoSrc(undefined);
-    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-    const small = window.matchMedia("(max-width: 900px)").matches || !!conn?.saveData;
-    setVideoSrc(small ? variants.mobile : variants.desktop);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // safety net: some browsers only autoplay if "muted" is set on the element itself
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    v.setAttribute("muted", "");
+    const tryPlay = () => {
+      if (v.paused) v.play().catch(() => {});
+    };
+    tryPlay();
+    v.addEventListener("canplay", tryPlay);
+    // if the browser blocked it (e.g. battery saver), start on the first touch/scroll
+    const opts = { once: true, passive: true } as const;
+    window.addEventListener("touchstart", tryPlay, opts);
+    window.addEventListener("scroll", tryPlay, opts);
+    window.addEventListener("click", tryPlay, opts);
+    document.addEventListener("visibilitychange", tryPlay);
+    return () => {
+      v.removeEventListener("canplay", tryPlay);
+      window.removeEventListener("touchstart", tryPlay);
+      window.removeEventListener("scroll", tryPlay);
+      window.removeEventListener("click", tryPlay);
+      document.removeEventListener("visibilitychange", tryPlay);
+    };
   }, [videoUrl]);
   const { locale, t } = useLocale();
   // re-check every minute so the clock rolls over to the next high water
@@ -103,9 +123,9 @@ export function Hero({
       <div className="absolute inset-0">
         {videoUrl ? (
           <video
-            key={videoSrc ?? "poster"}
+            ref={videoRef}
+            key={videoUrl}
             className="absolute inset-0 w-full h-full object-cover"
-            src={videoSrc}
             poster={variants?.poster}
             autoPlay
             muted
@@ -114,7 +134,12 @@ export function Hero({
             preload="auto"
             aria-hidden="true"
             tabIndex={-1}
-          />
+          >
+            {variants && variants.mobile !== variants.desktop && (
+              <source src={variants.mobile} type="video/mp4" media="(max-width: 900px)" />
+            )}
+            <source src={variants?.desktop} type={/\.webm$/i.test(videoUrl) ? "video/webm" : "video/mp4"} />
+          </video>
         ) : (
           <PhotoPlaceholder dark className="absolute inset-0 h-full w-full" />
         )}
