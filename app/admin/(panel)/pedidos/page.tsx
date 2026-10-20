@@ -65,6 +65,8 @@ export default function PedidosPage() {
   const [filter, setFilter] = useState<Filter>("todos");
   const [q, setQ] = useState("");
   const [open, setOpen] = useState<string | null>(null);
+  const [confirmDel, setConfirmDel] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetch("/api/admin/reservations", { cache: "no-store" })
@@ -100,7 +102,29 @@ export default function PedidosPage() {
     }
   }
 
+  async function remove(r: Reservation) {
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/admin/reservations", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: r.id }),
+      });
+      const d = await readJson(res);
+      if (!res.ok) throw new Error(d?.error || `erro ${res.status}`);
+      setRows((rs) => rs.filter((x) => x.id !== r.id));
+      setOpen(null);
+      setConfirmDel(null);
+      window.dispatchEvent(new Event("pm-unread-changed"));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   function toggle(r: Reservation) {
+    setConfirmDel(null);
     const next = open === r.id ? null : r.id;
     setOpen(next);
     if (next && isUnread(r)) setRead(r, true);
@@ -279,7 +303,7 @@ export default function PedidosPage() {
 
               {isOpen && (
                 <div className="px-5 md:pl-[54px] pb-6 pt-2 bg-pm-bgAlt">
-                  <div className="flex flex-wrap gap-3 mb-5">
+                  <div className="flex flex-wrap items-center gap-3 mb-5">
                     <a href={`mailto:${r.email}`} className="bg-pm-ink text-pm-bg py-2 px-4 font-label font-bold text-[11px] tracking-[0.12em] uppercase">
                       Email
                     </a>
@@ -303,6 +327,36 @@ export default function PedidosPage() {
                         Marcar como não lido
                       </button>
                     )}
+                    <span className="ml-auto flex items-center gap-3">
+                      {confirmDel === r.id ? (
+                        <>
+                          <span className="text-[13px] text-pm-graphite">Apagar de vez este pedido?</span>
+                          <button
+                            type="button"
+                            onClick={() => remove(r)}
+                            disabled={deleting}
+                            className="bg-[#A0524A] text-white py-2 px-4 font-label font-bold text-[11px] tracking-[0.12em] uppercase disabled:opacity-50"
+                          >
+                            {deleting ? "A apagar…" : "Sim, apagar"}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setConfirmDel(null)}
+                            className="font-label font-bold text-[11px] tracking-[0.12em] uppercase text-pm-concrete hover:text-pm-ink px-2"
+                          >
+                            Cancelar
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => setConfirmDel(r.id)}
+                          className="font-label font-bold text-[11px] tracking-[0.12em] uppercase text-pm-concrete hover:text-[#A0524A] px-2"
+                        >
+                          Apagar pedido
+                        </button>
+                      )}
+                    </span>
                   </div>
                   <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3 text-[14px]">
                     <Item k="Email" v={r.email} />

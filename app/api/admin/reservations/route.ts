@@ -52,3 +52,22 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: `unexpected: ${e instanceof Error ? e.message : String(e)}` }, { status: 500 });
   }
 }
+
+// Delete one reservation for good (e.g. a test request): { id }
+export async function DELETE(req: NextRequest) {
+  try {
+    if (!(await isAdmin())) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    const supabase = getSupabaseServerClient();
+    if (!supabase) return NextResponse.json({ error: "supabase_not_configured" }, { status: 500 });
+
+    const body = await req.json().catch(() => null);
+    const id = typeof body?.id === "string" ? body.id : null;
+    if (!id) return NextResponse.json({ error: "missing id" }, { status: 400 });
+
+    const { error } = await supabase.from("reservations").delete().eq("id", id);
+    if (error) return NextResponse.json({ error: `db: ${error.message}` }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    return NextResponse.json({ error: `unexpected: ${e instanceof Error ? e.message : String(e)}` }, { status: 500 });
+  }
+}
