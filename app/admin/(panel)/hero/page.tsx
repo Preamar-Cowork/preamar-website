@@ -355,7 +355,7 @@ export default function AdminHeroPage() {
               </p>
             )}
             <p className="text-pm-concrete text-[12px] mt-4">
-              MP4 ou WebM, sem som, até ~40 MB. O vídeo é publicado logo ao enviar.
+              MP4 sem som, comprimido — idealmente até 6 MB. Vídeos pesados gastam rapidamente o limite de tráfego gratuito do Supabase (cada visita descarrega o vídeo). O vídeo é publicado logo ao enviar.
             </p>
           </Panel>
         </div>

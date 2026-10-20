@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
 
     const { error: uploadError } = await supabase.storage
       .from("media")
-      .upload(path, buffer, { contentType: file.type || "video/mp4", upsert: true });
+      .upload(path, buffer, { contentType: file.type || "video/mp4", upsert: true, cacheControl: "31536000" });
 
     if (uploadError) {
       return NextResponse.json(

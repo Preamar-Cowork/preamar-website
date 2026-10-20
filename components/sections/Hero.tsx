@@ -17,6 +17,16 @@ import {
 } from "@/lib/heroSettings";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Hero video files. The site's own video lives in /public/media as
+ * hero-1080.mp4 (desktop), hero-720.mp4 (phones / data saver) and
+ * hero-poster.jpg (shown while it loads). Any other URL is used as-is.
+ */
+function videoVariants(url: string) {
+  const m = url.match(/^(.*)-1080\.mp4$/);
+  return m ? { desktop: url, mobile: `${m[1]}-720.mp4`, poster: `${m[1]}-poster.jpg` } : { desktop: url, mobile: url, poster: undefined };
+}
 const fmtHeight = (m: number, locale: string) => (locale === "pt" ? m.toFixed(1).replace(".", ",") : m.toFixed(1));
 const INK = "#3F4346";
 const OFF = "#F3F1EC";
@@ -40,6 +50,17 @@ export function Hero({
 }) {
   // no entrance animations in the admin preview (it re-renders on every keystroke)
   const reduce = useReducedMotion() || contained;
+
+  // pick the lighter video on small screens or "save data"; nothing downloads before the page is interactive
+  const variants = videoUrl ? videoVariants(videoUrl) : null;
+  const [videoSrc, setVideoSrc] = useState<string | undefined>(contained ? variants?.desktop : undefined);
+  useEffect(() => {
+    if (!variants) return setVideoSrc(undefined);
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+    const small = window.matchMedia("(max-width: 900px)").matches || !!conn?.saveData;
+    setVideoSrc(small ? variants.mobile : variants.desktop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoUrl]);
   const { locale, t } = useLocale();
   // re-check every minute so the clock rolls over to the next high water
   const [now, setNow] = useState<number | null>(null);
@@ -82,9 +103,10 @@ export function Hero({
       <div className="absolute inset-0">
         {videoUrl ? (
           <video
-            key={videoUrl}
+            key={videoSrc ?? "poster"}
             className="absolute inset-0 w-full h-full object-cover"
-            src={videoUrl}
+            src={videoSrc}
+            poster={variants?.poster}
             autoPlay
             muted
             loop

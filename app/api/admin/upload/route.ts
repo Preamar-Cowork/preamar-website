@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const path = `images/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
     const { error } = await supabase.storage
       .from("media")
-      .upload(path, Buffer.from(await file.arrayBuffer()), { contentType: file.type, upsert: false });
+      .upload(path, Buffer.from(await file.arrayBuffer()), { contentType: file.type, upsert: false, cacheControl: "31536000" });
     if (error) return NextResponse.json({ error: `storage: ${error.message}` }, { status: 500 });
 
     const { data } = supabase.storage.from("media").getPublicUrl(path);
