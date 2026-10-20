@@ -65,20 +65,26 @@ export function Hero({
     const tryPlay = () => {
       if (v.paused) v.play().catch(() => {});
     };
-    tryPlay();
-    v.addEventListener("canplay", tryPlay);
-    // if the browser blocked it (e.g. battery saver), start on the first touch/scroll
-    const opts = { once: true, passive: true } as const;
-    window.addEventListener("touchstart", tryPlay, opts);
-    window.addEventListener("scroll", tryPlay, opts);
-    window.addEventListener("click", tryPlay, opts);
-    document.addEventListener("visibilitychange", tryPlay);
-    return () => {
-      v.removeEventListener("canplay", tryPlay);
-      window.removeEventListener("touchstart", tryPlay);
+    // If the browser blocked autoplay (e.g. iPhone battery saver), the first tap /
+    // click anywhere on the page starts it — the listeners are on the whole window,
+    // so the text and filter on top of the video don't get in the way. They stay
+    // until the video is actually playing.
+    const gestures = ["pointerup", "touchend", "click", "keydown"] as const;
+    const stop = () => {
+      gestures.forEach((g) => window.removeEventListener(g, tryPlay, true));
       window.removeEventListener("scroll", tryPlay);
-      window.removeEventListener("click", tryPlay);
       document.removeEventListener("visibilitychange", tryPlay);
+      v.removeEventListener("canplay", tryPlay);
+    };
+    gestures.forEach((g) => window.addEventListener(g, tryPlay, { capture: true, passive: true }));
+    window.addEventListener("scroll", tryPlay, { passive: true });
+    document.addEventListener("visibilitychange", tryPlay);
+    v.addEventListener("canplay", tryPlay);
+    v.addEventListener("playing", stop, { once: true });
+    tryPlay();
+    return () => {
+      stop();
+      v.removeEventListener("playing", stop);
     };
   }, [videoUrl]);
   const { locale, t } = useLocale();
