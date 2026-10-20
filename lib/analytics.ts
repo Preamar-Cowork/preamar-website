@@ -13,7 +13,7 @@ export const ADS_ID = "AW-18515751428";
  * Google Ads → Objetivos → Conversões → (ação) → Configuração da etiqueta.
  * Empty = the lead is not reported to Google Ads yet.
  */
-export const ADS_LEAD_LABEL = "";
+export const ADS_LEAD_LABEL = "AwzxCOjDoZ4dEITk__xE";
 
 export const CONSENT_KEY = "pm-consent"; // "granted" | "denied"
 
